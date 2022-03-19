@@ -1,7 +1,4 @@
-/**
- * @summary Simple shell website for Triceratops scene
- * @author Meli <meliharvey87@gmail.com>
- */
+// built off Triceratops example https://www.food4rhino.com/en/app/triceratops
 
 var camera, controls, scene, renderer;
 

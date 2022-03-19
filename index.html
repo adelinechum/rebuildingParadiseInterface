@@ -6,35 +6,15 @@
 		<meta name="author" content="Adeline Chum & Adam Vosburgh">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="icon" href="./assets/ParadiseSeal.png">
-		<style>
-			/* for full screen canvas, use these styles */
-			html, body {
-				margin: 0;
-				height: 100%;
-				width: 100%;
-			}
-			/* style the three.js container however your want */
-			#container {
-				position: relative;
-				height: 100%;
-				width: 100%;
-			}
-			/* removes outline when clicking on three.js canvas */
-			canvas:focus {
-				outline: none;
-			}
-			/* the style of the progress text */
-		  #progress {
-				position: absolute;
-	      top: 0;
-				margin: 6px;
-				color: white;
-				font-family: 'Courier New', Courier, monospace;
-	      z-index: 2000;
-			}
-		</style>
+		<link rel="stylesheet" href="./main.css">
 	</head>
 	<body>
+		<div class="topnav">
+ 			<!-- <a class="active" href="#home">Home</a> -->
+			<a href="./about.html">About</a>
+			<a href="#Scenes">Scenes</a>
+		</div>
+
 		<!-- this is the container where the three.js scene will go -->
 		<div id="container"></div>
 
