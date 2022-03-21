@@ -12,15 +12,18 @@ html, body {
   /* style the three.js container however your want */
   #container {
     position: relative;
+    background-color: black;
     height: 100%;
     width: 100%;
   }
 
-  /* style the three.js container however your want */
   #aboutPage {
     position: relative;
+    font-family: 'Courier New', Courier, monospace;
     height: 100%;
     width: 100%;
+    background-color: black;
+    color: white;
   }
 
   /* removes outline when clicking on three.js canvas */

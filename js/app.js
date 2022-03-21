@@ -19,6 +19,7 @@ function init() {
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.shadowMap.enabled = true; // if you don't want shadows, set to false
   renderer.setClearColor (0000000, 1); // this is the background color seen while scene is loading
+
   container.appendChild( renderer.domElement );
 
   // create camera (default field of view is 60)
