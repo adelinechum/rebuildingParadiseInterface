@@ -32,9 +32,12 @@ function init() {
 
   // create camera (default field of view is 60)
   // PerspectiveCamera (FieldofView,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 60, container.clientWidth / container.clientHeight, 1, 100000000000 );
+  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 1, 100000000000 );
   camera.position.set( -34178, 6000, 8989); // starting position of the camera
-  camera.lookAt(camera.position);
+  // TO DO fix this camera.lookAt(camera.position);
+
+  //TO DO fix camera zoom out
+
 
   console.log(camera.position)
 
@@ -68,7 +71,7 @@ function init() {
 
   		// assign the loaded object to the scene variable
   		scene = obj;
-     // scene.fog = new THREE.Fog( 'white', 0, 750 );
+      scene.fog = new THREE.Fog( 'black', 20, 50000 );
   	},
 
   	// onProgress callback
