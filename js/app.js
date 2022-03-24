@@ -1,8 +1,16 @@
 // built off Triceratops example https://www.food4rhino.com/en/app/triceratops
 
+import * as THREE from '../three.js-master/examples/build/three.module.js';
+
+import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+
+//import { FirstPersonControls } from '../three.js-master/examples/jsm/controls/FirstPersonControls.js';
+
 var camera, controls, scene, renderer;
 
-console.log(window.location.href)
+const clock = new THREE.Clock();
+
+//console.log(window.location.href)
 
 init();
 animate();
@@ -15,30 +23,35 @@ function init() {
   container = document.getElementById('container');
 
   // create the rendered and set it to the height/width of the container
-  renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.shadowMap.enabled = true; // if you don't want shadows, set to false
-  renderer.setClearColor (0000000, 1); // this is the background color seen while scene is loading
-
+  
+  renderer = new THREE.WebGLRenderer();
+  //renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setClearColor ('black', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
 
   // create camera (default field of view is 60)
   // PerspectiveCamera (FieldofView,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 60, container.clientWidth / container.clientHeight, 1, 1000000000 );
-  camera.position.set( -1500000, 1200000, -949400 ); // starting position of the camera
-  //camera.lookAt(1000, 1000, 1000);
+  camera = new THREE.PerspectiveCamera( 60, container.clientWidth / container.clientHeight, 1, 100000000000 );
+  camera.position.set( -34178, 6000, 8989); // starting position of the camera
+  camera.lookAt(camera.position);
 
   console.log(camera.position)
 
-  // camera controls to allow for orbiting
-  controls = new THREE.OrbitControls( camera, renderer.domElement );
+  //camera controls to allow for orbiting
+  controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; // creates a softer orbiting feel
   controls.dampingFactor = 0.1; // determines how soft
   controls.screenSpacePanning = true;
   controls.maxPolarAngle = Math.PI / 2;
 
+  //controls = new FirstPersonControls( camera, renderer.domElement );
+  //controls.movementSpeed = 150;
+  //controls.lookSpeed = 0.1;
+
+
   // this is only required when using RectAreaLight
-  THREE.RectAreaLightUniformsLib.init();
+  // RectAreaLightUniformsLib.init();
 
   // load scene
   var loader = new THREE.ObjectLoader();
@@ -51,19 +64,23 @@ function init() {
   	function ( obj ) {
       // remove the loading text
       document.getElementById('progress').remove();
+      
 
   		// assign the loaded object to the scene variable
   		scene = obj;
+     // scene.fog = new THREE.Fog( 'white', 0, 750 );
   	},
 
   	// onProgress callback
-  	function ( xhr ) {
+  	 function ( xhr ) {
       progressText( xhr ) // delete this if you don't want the progress text
-  	},
+  	 },
 
   	// onError callback
   	function ( err ) {
   		console.error( 'An error happened' );
+      console.log('error found');
+      console.log('ERROR FOUND: ' + err);
   	}
   );
 
@@ -86,7 +103,7 @@ function progressText( xhr ) {
     text = 'loading: ' + Math.round(xhr.loaded / 1000) + 'kb'
   }
 
-  console.log(text);
+  // console.log(text);
 
   progress = document.createElement('DIV');
   progress.id = 'progress';
@@ -109,14 +126,14 @@ function onWindowResize() {
 function animate() {
 
   requestAnimationFrame( animate );
-  //console.log(camera.position)
+ //console.log(camera.position) //use to set initial camera
   controls.update();
   render();
 
 }
 
 function render() {
-
+  controls.update( clock.getDelta() );
   renderer.render( scene, camera );
 
 }

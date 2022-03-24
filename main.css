@@ -2,7 +2,6 @@
 --text-left-1: 50px;
 }
 
-
 html, body {
     margin: 0;
     height: 100%;
@@ -11,19 +10,28 @@ html, body {
 
   /* style the three.js container however your want */
   #container {
-    position: relative;
+    position: fixed;
     background-color: black;
     height: 100%;
     width: 100%;
   }
 
   #aboutPage {
-    position: relative;
-    font-family: 'Courier New', Courier, monospace;
+    position: fixed;
     height: 100%;
     width: 100%;
     background-color: black;
+    margin-top: 0px;
+  }
+
+  #aboutText{
     color: white;
+    background-color: black;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    font-family: 'Roboto', sans-serif;
   }
 
   /* removes outline when clicking on three.js canvas */
@@ -37,7 +45,7 @@ html, body {
     top: 0;
     margin: 6px;
     color: white;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Roboto', sans-serif;
     z-index: 2000;
   }
 
@@ -55,7 +63,8 @@ html, body {
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Roboto', sans-serif;
+    z-index: 1000;
   }
 
   /* Change the color of links on hover */
@@ -76,10 +85,25 @@ html, body {
     z-index: 10;
     position: fixed;
     text-align: left;
-    height: 80%;
-    width: 200px;
-    padding-top: 10%;
-    padding-bottom: 10%;
+    width: 300px;
+    height: 90%;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 25px;
     font-size: inherit;
+  }
+
+  .mapView{
+    z-index: 15;
+    position: fixed;
+    text-align: center;
+    align-items: center;
+    width: 280px;
+    height: 280px ;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+
   }
 
