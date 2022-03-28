@@ -3,17 +3,35 @@
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+import { Box3 } from '../three.js-master/examples/jsm/controls/three.module.js';
 
 //import { FirstPersonControls } from '../three.js-master/examples/jsm/controls/FirstPersonControls.js';
 
-var camera, controls, scene, renderer;
+// TO DO 
+//First Person Ref: https://threejs.org/examples/?q=pointer#misc_controls_pointerlock
+//
 
+var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const threshold = 0.1;
+
+//center of bounding box
+var center;
+
+//Bounding box to find center
+// const box = new THREE.Box3()
 
 //console.log(window.location.href)
 
 init();
 animate();
+window.addEventListener( 'pointermove', onPointerMove);        
+window.requestAnimationFrame(render);
+
+var allChildren;
 
 function init() {
 
@@ -30,14 +48,14 @@ function init() {
   renderer.setClearColor ('black', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
 
-  // create camera (default field of view is 60)
-  // PerspectiveCamera (FieldofView,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 1, 100000000000 );
+  // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
+  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 1, 50000 );
+
+  // camera.maxDistance= 1000
   camera.position.set( -34178, 6000, 8989); // starting position of the camera
+
   // TO DO fix this camera.lookAt(camera.position);
-
-  //TO DO fix camera zoom out
-
+  //TO DO fix max camera zoom out
 
   console.log(camera.position)
 
@@ -45,16 +63,13 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; // creates a softer orbiting feel
   controls.dampingFactor = 0.1; // determines how soft
-  controls.screenSpacePanning = true;
+  controls.enableZoom = true;
+  controls.maxDistance = 35847;
+  //controls.maxZoom = 1;
   controls.maxPolarAngle = Math.PI / 2;
+  //controls.autoRotate = true;
+  controls.screenSpacePanning = true;
 
-  //controls = new FirstPersonControls( camera, renderer.domElement );
-  //controls.movementSpeed = 150;
-  //controls.lookSpeed = 0.1;
-
-
-  // this is only required when using RectAreaLight
-  // RectAreaLightUniformsLib.init();
 
   // load scene
   var loader = new THREE.ObjectLoader();
@@ -63,15 +78,28 @@ function init() {
   	// resource URL
   	"./assets/groundPoints.json",
 
+
   	// onLoad callback
   	function ( obj ) {
       // remove the loading text
       document.getElementById('progress').remove();
       
-
   		// assign the loaded object to the scene variable
   		scene = obj;
+      console.log(scene.children)
+
+      console.log(scene);
       scene.fog = new THREE.Fog( 'black', 20, 50000 );
+
+      //bounding box to get center of objects
+      var bbox = new THREE.Box3().setFromObject(obj);
+      //console.log(bbox);
+      center = new THREE.Vector3();
+      console.log(bbox.getCenter(center));
+      console.log(center);
+      controls.target = center;
+
+
   	},
 
   	// onProgress callback
@@ -87,8 +115,10 @@ function init() {
   	}
   );
 
+
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
+  document.addEventListener( 'pointermove', onPointerMove );
 
 }
 
@@ -106,8 +136,6 @@ function progressText( xhr ) {
     text = 'loading: ' + Math.round(xhr.loaded / 1000) + 'kb'
   }
 
-  // console.log(text);
-
   progress = document.createElement('DIV');
   progress.id = 'progress';
   textNode = document.createTextNode(text);
@@ -115,12 +143,17 @@ function progressText( xhr ) {
   container.appendChild(progress)
 }
 
+function onPointerMove( event ) {
+
+  pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
+
 // function for handling resize events
 function onWindowResize() {
 
   camera.aspect = container.clientWidth / container.clientHeight;
-  camera.updateProjectionMatrix();
-
   renderer.setSize( container.clientWidth, container.clientHeight );
 
 }
@@ -128,15 +161,55 @@ function onWindowResize() {
 // animates the scene
 function animate() {
 
+  //camera.position.set( -34178, 6000, 8989);
+
+
+  // if(typeof center != "undefined"){
+  //   // console.log(camera.position.sub(center));
+  //   camera.position.sub(center);
+  // console.log("animate called!!!");
+  // console.log(center.distanceTo(camera.position));
+
+  // }
+
+    // console.log(camera.position.sub( new THREE.Vector3(0,0,0)));
+
+
+
   requestAnimationFrame( animate );
  //console.log(camera.position) //use to set initial camera
+
+ //restrict camera position
+ 
+  //camera.position.clamp()
+  // console.log(camera.position);
+
+  // console.log(center);
+
+  
   controls.update();
   render();
 
 }
 
-function render() {
-  controls.update( clock.getDelta() );
-  renderer.render( scene, camera );
+function render() { 
+  // update the picking ray with the camera and pointer position
+	raycaster.setFromCamera( pointer, camera );
 
+	// calculate objects intersecting the picking ray
+	const intersects = raycaster.intersectObjects( scene.children );
+  raycaster.params.Points.threshold = 1;
+
+
+  for ( let i = 0; i < intersects.length; i ++ ) {
+    console.log(intersects [i] ); // this is not printing
+
+  }
+  
+  controls.update( clock.getDelta() );
+  renderer.render( scene, camera ); 
 }
+
+
+
+

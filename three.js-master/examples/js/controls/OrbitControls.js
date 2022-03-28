@@ -16,6 +16,11 @@
 		type: 'end'
 	};
 
+
+	//AC Added for scope clamp
+	var minPan = new THREE.Vector3( - 2, - 2, - 2 );
+	var maxPan = new THREE.Vector3( 2, 2, 2 );
+
 	class OrbitControls extends THREE.EventDispatcher {
 
 		constructor( object, domElement ) {
@@ -218,6 +223,9 @@
 						scope.target.add( panOffset );
 
 					}
+
+					//AC added scope clamp
+					scope.target.clamp( minPan, maxPan );
 
 					offset.setFromSpherical( spherical ); // rotate offset back to "camera-up-vector-is-up" space
 
