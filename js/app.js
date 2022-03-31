@@ -64,7 +64,7 @@ function init() {
   controls.enableDamping = true; // creates a softer orbiting feel
   controls.dampingFactor = 0.1; // determines how soft
   controls.enableZoom = true;
-  controls.maxDistance = 35847;
+  controls.maxDistance = 33000; // 35847 magnitude of camera position vector
   //controls.maxZoom = 1;
   controls.maxPolarAngle = Math.PI / 2;
   //controls.autoRotate = true;
@@ -98,8 +98,7 @@ function init() {
       console.log(bbox.getCenter(center));
       console.log(center);
       controls.target = center;
-
-
+      console.log(scene.children);
   	},
 
   	// onProgress callback
@@ -161,51 +160,30 @@ function onWindowResize() {
 // animates the scene
 function animate() {
 
-  //camera.position.set( -34178, 6000, 8989);
-
-
-  // if(typeof center != "undefined"){
-  //   // console.log(camera.position.sub(center));
-  //   camera.position.sub(center);
-  // console.log("animate called!!!");
-  // console.log(center.distanceTo(camera.position));
-
-  // }
-
-    // console.log(camera.position.sub( new THREE.Vector3(0,0,0)));
-
-
-
   requestAnimationFrame( animate );
- //console.log(camera.position) //use to set initial camera
-
- //restrict camera position
- 
-  //camera.position.clamp()
-  // console.log(camera.position);
-
-  // console.log(center);
-
   
   controls.update();
   render();
 
 }
 
+
 function render() { 
   // update the picking ray with the camera and pointer position
 	raycaster.setFromCamera( pointer, camera );
 
 	// calculate objects intersecting the picking ray
-	const intersects = raycaster.intersectObjects( scene.children );
-  raycaster.params.Points.threshold = 1;
+	const intersects = raycaster.intersectObjects( scene.children, true );
+  raycaster.params.Points.threshold = 10; // don't know why threshold this high
 
 
   for ( let i = 0; i < intersects.length; i ++ ) {
     console.log(intersects [i] ); // this is not printing
 
+    intersects[i].object.material.color.set ("red");
+
   }
-  
+
   controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
 }
