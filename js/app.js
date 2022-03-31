@@ -77,6 +77,8 @@ function init() {
   loader.load(
   	// resource URL
   	"./assets/groundPoints.json",
+   // "./assets/camerasRenders.json",
+
 
 
   	// onLoad callback
@@ -180,7 +182,7 @@ function render() {
   for ( let i = 0; i < intersects.length; i ++ ) {
     console.log(intersects [i] ); // this is not printing
 
-    intersects[i].object.material.color.set ("red");
+    //intersects[i].object.material.color.set ("red");
 
   }
 
