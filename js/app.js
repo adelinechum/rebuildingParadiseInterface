@@ -1,17 +1,18 @@
-// built off Triceratops example https://www.food4rhino.com/en/app/triceratops
+// AC I had to change the file location 'three' to '../../../build/three.module.js'
 
+import { Color } from '../three.js-master/build/three.module.js';
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 
-//import { GLTFLoader } from '../three.js-master/examples/jsm/GLTFLoader.js'
+import { Flow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
+import { InstancedFlow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
 
-//import { Box3 } from '../three.js-master/examples/jsm/controls/three.module.js';
-//import { FirstPersonControls } from '../three.js-master/examples/jsm/controls/FirstPersonControls.js';
 
 // TO DO 
 //First Person Ref: https://threejs.org/examples/?q=pointer#misc_controls_pointerlock
 //Loading multiple files: https://redstapler.co/load-multiple-model-three-js-promise/
+// for cars https://hofk.de/main/discourse.threejs/2021/MotionAlongCurve/MotionAlongCurve.html
 
 
 var container, camera, controls, scene, renderer;
@@ -23,6 +24,7 @@ const threshold = 0.1;
 
 var liveCameras = []
 var historicalPts = []
+var sinCounter = 0; 
 
 //center of bounding box
 var center;
@@ -60,9 +62,6 @@ function init() {
   // camera.maxDistance= 1000
   camera.position.set( -34178, 6000, 8989); // starting position of the camera
 
-  // TO DO fix this camera.lookAt(camera.position);
-  //TO DO fix max camera zoom out
-
   console.log(camera.position)
 
   //camera controls to allow for orbiting
@@ -79,11 +78,6 @@ function init() {
 
   // load scene
   var loader = new THREE.ObjectLoader();
-
-
-
-
-     loader.load("./assets/groundPoints.json",)
 
   loader.load(
   	// resource URL
@@ -142,7 +136,6 @@ function init() {
   	}
   );
 
-
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'pointermove', onPointerMove );
@@ -188,6 +181,9 @@ function onWindowResize() {
 // animates the scene
 function animate() {
 
+// controls object jumping speed
+  sinCounter = sinCounter + (Math.PI / 32);
+
   requestAnimationFrame( animate );
   
   controls.update();
@@ -198,27 +194,24 @@ function animate() {
   });  
 //TO DO change to move up and down
   historicalPts.forEach(element => {
-    element.rotation.y -= 0.05;
+    //element.rotation.y -= 0.05;
+    element.translateY((Math.sin(sinCounter) * 25));
   });  
  
   render();
 
 }
 
-
 function render() { 
   // update the picking ray with the camera and pointer position
 	raycaster.setFromCamera( pointer, camera );
-
 
 	// calculate objects intersecting the picking ray
 	const intersects = raycaster.intersectObjects( scene.children, true );
   raycaster.params.Points.threshold = 10; // don't know why threshold this high
 
-
   for ( let i = 0; i < intersects.length; i ++ ) {
-    //console.log(intersects [i] ); // this is not printing
-
+    console.log(intersects [i] ); // this is not printing
     //intersects[i].object.material.color.set ("red");
 
   }

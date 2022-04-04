@@ -19,7 +19,7 @@ import {
 	Scene,
 	Texture,
 	Vector3
-} from 'three';
+} from '../../../build/three.module.js';
 
 
 class GLTFExporter {
