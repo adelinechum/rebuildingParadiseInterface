@@ -3,13 +3,16 @@
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
-import { Box3 } from '../three.js-master/examples/jsm/controls/three.module.js';
 
+//import { GLTFLoader } from '../three.js-master/examples/jsm/GLTFLoader.js'
+
+//import { Box3 } from '../three.js-master/examples/jsm/controls/three.module.js';
 //import { FirstPersonControls } from '../three.js-master/examples/jsm/controls/FirstPersonControls.js';
 
 // TO DO 
 //First Person Ref: https://threejs.org/examples/?q=pointer#misc_controls_pointerlock
-//
+//Loading multiple files: https://redstapler.co/load-multiple-model-three-js-promise/
+
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
@@ -17,6 +20,9 @@ const clock = new THREE.Clock();
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const threshold = 0.1;
+
+var liveCameras = []
+var historicalPts = []
 
 //center of bounding box
 var center;
@@ -74,11 +80,15 @@ function init() {
   // load scene
   var loader = new THREE.ObjectLoader();
 
+
+
+
+     loader.load("./assets/groundPoints.json",)
+
   loader.load(
   	// resource URL
   	"./assets/groundPoints.json",
    // "./assets/camerasRenders.json",
-
 
 
   	// onLoad callback
@@ -88,7 +98,7 @@ function init() {
       
   		// assign the loaded object to the scene variable
   		scene = obj;
-      console.log(scene.children)
+      console.log(scene.children);
 
       console.log(scene);
       scene.fog = new THREE.Fog( 'black', 20, 50000 );
@@ -101,6 +111,22 @@ function init() {
       console.log(center);
       controls.target = center;
       console.log(scene.children);
+
+      //loop through to find camera names
+      scene.children.forEach(child => {
+        //console.log(child.name)
+        if (child.name.match('^liveCam')) {
+          liveCameras.push(child);
+        }
+      });
+
+      //loop through to find historical points
+      scene.children.forEach(child => {
+        if (child.name.match('^historicalPt')) {
+          historicalPts.push(child);
+        }
+      });
+
   	},
 
   	// onProgress callback
@@ -165,6 +191,16 @@ function animate() {
   requestAnimationFrame( animate );
   
   controls.update();
+
+  // live cam & historical points animate
+  liveCameras.forEach(element => {
+    element.rotation.y -= 0.05;
+  });  
+//TO DO change to move up and down
+  historicalPts.forEach(element => {
+    element.rotation.y -= 0.05;
+  });  
+ 
   render();
 
 }
@@ -174,13 +210,14 @@ function render() {
   // update the picking ray with the camera and pointer position
 	raycaster.setFromCamera( pointer, camera );
 
+
 	// calculate objects intersecting the picking ray
 	const intersects = raycaster.intersectObjects( scene.children, true );
   raycaster.params.Points.threshold = 10; // don't know why threshold this high
 
 
   for ( let i = 0; i < intersects.length; i ++ ) {
-    console.log(intersects [i] ); // this is not printing
+    //console.log(intersects [i] ); // this is not printing
 
     //intersects[i].object.material.color.set ("red");
 
@@ -189,7 +226,3 @@ function render() {
   controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
 }
-
-
-
-
