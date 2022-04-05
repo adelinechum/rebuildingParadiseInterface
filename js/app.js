@@ -4,7 +4,8 @@ import { Color } from '../three.js-master/build/three.module.js';
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
-
+import { GLTFExporter } from '../three.js-master/examples/jsm/exporters/GLTFExporter.js';
+import { GUI } from '../three.js-master/examples/jsm/libs/lil-gui.module.min.js';
 import { Flow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
 import { InstancedFlow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
 
@@ -14,6 +15,88 @@ import { InstancedFlow } from '../three.js-master/examples/jsm/modifiers/CurveMo
 //Loading multiple files: https://redstapler.co/load-multiple-model-three-js-promise/
 // for cars https://hofk.de/main/discourse.threejs/2021/MotionAlongCurve/MotionAlongCurve.html
 
+function exportGLTF( input ) {
+
+  const gltfExporter = new GLTFExporter();
+
+  const options = {
+    trs: params.trs,
+    onlyVisible: params.onlyVisible,
+    truncateDrawRange: params.truncateDrawRange,
+    binary: params.binary,
+    maxTextureSize: params.maxTextureSize
+  };
+  gltfExporter.parse(
+    input,
+    function ( result ) {
+
+      if ( result instanceof ArrayBuffer ) {
+
+        saveArrayBuffer( result, 'scene.glb' );
+
+      } else {
+
+        const output = JSON.stringify( result, null, 2 );
+        console.log( output );
+        saveString( output, 'scene.gltf' );
+
+      }
+
+    },
+    function ( error ) {
+
+      console.log( 'An error happened during parsing', error );
+
+    },
+    options
+  );
+
+}
+
+const link = document.createElement( 'a' );
+link.style.display = 'none';
+document.body.appendChild( link ); // Firefox workaround, see #6594
+
+function save( blob, filename ) {
+
+  link.href = URL.createObjectURL( blob );
+  link.download = filename;
+  link.click();
+
+  // URL.revokeObjectURL( url ); breaks Firefox...
+
+}
+
+function saveString( text, filename ) {
+
+  save( new Blob( [ text ], { type: 'text/plain' } ), filename );
+
+}
+
+
+function saveArrayBuffer( buffer, filename ) {
+
+  save( new Blob( [ buffer ], { type: 'application/octet-stream' } ), filename );
+
+}
+
+
+let  object, object2, material, geometry, scene1, scene2;
+let gridHelper, sphere, waltHead;
+
+const params = {
+  trs: false,
+  onlyVisible: true,
+  truncateDrawRange: true,
+  binary: false,
+  maxTextureSize: 4096,
+  exportScene1: exportScene1,
+  exportScenes: exportScenes,
+  exportSphere: exportSphere,
+  exportHead: exportHead,
+  exportObjects: exportObjects,
+  exportSceneObject: exportSceneObject
+};
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
@@ -140,7 +223,70 @@ function init() {
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'pointermove', onPointerMove );
 
+  
+  const gui = new GUI();
+
+  let h = gui.addFolder( 'Settings' );
+  h.add( params, 'trs' ).name( 'Use TRS' );
+  h.add( params, 'onlyVisible' ).name( 'Only Visible Objects' );
+  h.add( params, 'truncateDrawRange' ).name( 'Truncate Draw Range' );
+  h.add( params, 'binary' ).name( 'Binary (GLB)' );
+  h.add( params, 'maxTextureSize', 2, 8192 ).name( 'Max Texture Size' ).step( 1 );
+
+  h = gui.addFolder( 'Export' );
+  h.add( params, 'exportScene1' ).name( 'Export Scene 1' );
+  h.add( params, 'exportScenes' ).name( 'Export Scene 1 and 2' );
+  h.add( params, 'exportSphere' ).name( 'Export Sphere' );
+  h.add( params, 'exportHead' ).name( 'Export Head' );
+  h.add( params, 'exportObjects' ).name( 'Export Sphere With Grid' );
+  h.add( params, 'exportSceneObject' ).name( 'Export Scene 1 and Object' );
+
+  gui.open();
+
 }
+
+function exportScene1() {
+
+  exportGLTF( scene );
+
+}
+
+function exportScenes() {
+
+  exportGLTF( [ scene1, scene2 ] );
+
+}
+
+function exportSphere() {
+
+  exportGLTF( sphere );
+
+}
+
+function exportHead() {
+
+  exportGLTF( waltHead );
+
+}
+
+function exportObjects() {
+
+  exportGLTF( [ sphere, gridHelper ] );
+
+}
+
+function exportSceneObject() {
+
+  exportGLTF( [ scene1, gridHelper ] );
+
+}
+
+
+//
+
+
+
+
 
 // adds progress text while the model is loading
 function progressText( xhr ) {
