@@ -3,7 +3,10 @@
 import { Color } from '../three.js-master/build/three.module.js';
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
+import Stats from '../three.js-master/examples/jsm/libs/stats.module.js';
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 
 import { Flow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
 import { InstancedFlow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
@@ -38,6 +41,9 @@ init();
 animate();
 window.addEventListener( 'pointermove', onPointerMove);        
 window.requestAnimationFrame(render);
+
+const stats = new Stats();
+let mixer;
 
 var allChildren;
 
@@ -78,7 +84,7 @@ function init() {
 
   // load scene
   var loader = new THREE.ObjectLoader();
-
+/*
   loader.load(
   	// resource URL
   	"./assets/groundPoints.json",
@@ -135,12 +141,53 @@ function init() {
       console.log('ERROR FOUND: ' + err);
   	}
   );
+*/
+const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath( '../three.js-master/examples/js/libs/draco/gltf/' );
+
+    const gltfloader = new GLTFLoader();
+    gltfloader.setDRACOLoader( dracoLoader );
+    gltfloader.load( './assets/TriceratopsStyleExport5.glb', function ( gltf ) {
+
+      const model = gltf.scene;
+      model.position.set( 1, 1, 0 );
+      model.scale.set( 0.01, 0.01, 0.01 );
+      scene.add( model );
+
+      mixer = new THREE.AnimationMixer( model );
+      mixer.clipAction( gltf.animations[ 0 ] ).play();
+
+      animate();
+
+    }, undefined, function ( e ) {
+
+      console.error( e );
+
+    } );
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
   document.addEventListener( 'pointermove', onPointerMove );
 
+  function animate() {
+
+    requestAnimationFrame( animate );
+  
+    const delta = clock.getDelta();
+  
+    mixer.update( delta );
+  
+    controls.update();
+  
+    stats.update();
+  
+    renderer.render( scene, camera );
+  
+  }
+
 }
+
+
 
 // adds progress text while the model is loading
 function progressText( xhr ) {
