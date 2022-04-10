@@ -17,9 +17,6 @@ const pointer = new THREE.Vector2();
 const threshold = 0.1;
 var objects = [];
 
-var raycasterPointer = new THREE.Raycaster();
-var mouse = { x : 0, y : 0 };
-
 var liveCameras = []
 var historicalPts = []
 var sinCounter = 0; 
@@ -60,6 +57,7 @@ function init() {
   container = document.getElementById('container');
 
   // create the rendered and set it to the height/width of the container
+  
   renderer = new THREE.WebGLRenderer();
   //renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -71,43 +69,18 @@ function init() {
 
   // camera.maxDistance= 1000
   camera.position.set( -1705, 197, 2500); // starting position of the camera
-  //console.log(camera.position)
-  // camera.position.z = 100;
+
+  console.log(camera.position)
 
   controls = new PointerLockControls( camera, document.body );
-
-  document.body.addEventListener( 'click', function () {
-    console.log("Come here!!!");
-  } );
-
-  document.body.addEventListener( 'keydown', function (e) {
-    if (e.key == "Shift") {
-      controls.unlock();
-    }
-  } );
-
-  document.body.addEventListener( 'keydown', function (e) {
-    console.log(e);
-    if (e.key == "Escape") {
-      console.log("escape pressed");
-      blocker.style.display = 'block';  
-      instructions.style.display = '';
-    }
-  } );
-
-
-
-  document.body.addEventListener( 'keyup', function (e) {
-    if (e.key == "Shift") {
-      controls.lock();
-    }
-  } );
 
   const blocker = document.getElementById( 'blocker' );
   const instructions = document.getElementById( 'instructions' );
 
   instructions.addEventListener( 'click', function () {
+
     controls.lock();
+
   } );
 
   controls.addEventListener( 'lock', function () {
@@ -117,12 +90,12 @@ function init() {
 
   } );
 
-  // controls.addEventListener( 'unlock', function () {
+  controls.addEventListener( 'unlock', function () {
 
-  //   blocker.style.display = 'block';
-  //   instructions.style.display = '';
+    blocker.style.display = 'block';
+    instructions.style.display = '';
 
-  // } );
+  } );
 
   scene.add( controls.getObject() );
 
@@ -190,11 +163,10 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown );
   document.addEventListener( 'keyup', onKeyUp );
 
-  raycasterPointer = new THREE.Raycaster();
-  renderer.domElement.addEventListener( 'click', raycast, false );
 
-  // floor 
-  // TO DO REMOVE THIS AFTER TOPO MESH INCLUDED
+  //raycaster = new THREE.Raycaster( new THREE.Vector3(), new THREE.Vector3( 0, - 1, 0 ), 0, 10 );
+
+  // floor
 
   let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 100, 1000 );
   floorGeometry.rotateX( - Math.PI / 2 );
@@ -226,9 +198,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/TriceratopsStyleExport5.glb', 
-    
-      function ( gltf ) {
+    gltfloader.load( './assets/TriceratopsStyleExport5.glb', function ( gltf ) {
 
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
@@ -245,14 +215,38 @@ const dracoLoader = new DRACOLoader();
       // TODO: this is breakable!!!
       objects = scene.children[2].children[0].children;
 
+
+/*       //bounding box to get center of objects
+      var bbox = new THREE.Box3().setFromObject(obj);
+      //console.log(bbox);
+      center = new THREE.Vector3();
+      console.log(bbox.getCenter(center));
+      console.log(center);
+      controls.target = center;
+      console.log(scene.children);
+
+      //loop through to find camera names
+      scene.children.forEach(child => {
+        //console.log(child.name)
+        if (child.name.match('^liveCam')) {
+          liveCameras.push(child);
+        }
+      });
+
+      //loop through to find historical points
+      scene.children.forEach(child => {
+        if (child.name.match('^historicalPt')) {
+          historicalPts.push(child);
+        }
+      }); */
+
       animate();
 
     }, undefined, function ( e ) {
 
       console.error( e );
 
-    },
- );
+    } );
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
@@ -389,64 +383,18 @@ function animate() {
 
 function render() { 
   // update the picking ray with the camera and pointer position
-	raycasterPointer.setFromCamera( pointer, camera );
+	raycaster.setFromCamera( pointer, camera );
 
 	// calculate objects intersecting the picking ray
-	const intersects = raycasterPointer.intersectObjects( scene.children, true );
-  raycasterPointer.params.Points.threshold = 10; // don't know why threshold this high
+	const intersects = raycaster.intersectObjects( scene.children, true );
+  raycaster.params.Points.threshold = 10; // don't know why threshold this high
 
   for ( let i = 0; i < intersects.length; i ++ ) {
-     //console.log(intersects [i] ); // this is not printing
-   //  intersects[i].object.material.color.set ("red");
+    // console.log(intersects [i] ); // this is not printing
+    // intersects[i].object.material.color.set ("red");
 
   }
 
   //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
 }
-
-function raycast ( e ) {
-  // Step 1: Detect light helper
-      //1. sets the mouse position with a coordinate system where the center
-      //   of the screen is the origin
-      mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-  
-      //2. set the picking ray from the camera position and mouse coordinates
-      raycasterPointer.setFromCamera( mouse, camera );    
-  
-      //3. compute intersections (note the 2nd parameter)
-      var intersects = raycasterPointer.intersectObjects( scene.children, true );
-      raycasterPointer.params.Points.threshold = 10; // don't know why threshold this high
-  
-      for ( var i = 0; i < intersects.length; i++ ) {
-          console.log( intersects[ i ] ); 
-
-      }
-  // Step 2: Detect normal objects
-      //1. sets the mouse position with a coordinate system where the center of the screen is the origin
-      mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-  
-      //2. set the picking ray from the camera position and mouse coordinates
-      raycasterPointer.setFromCamera( mouse, camera );    
-  
-      //3. compute intersections (no 2nd parameter true anymore)
-      var intersects = raycasterPointer.intersectObjects( scene.children );
-  
-      for ( var i = 0; i < intersects.length; i++ ) {
-          console.log( intersects[ i ] ); 
-          /*
-              An intersection has the following properties :
-                  - object : intersected object (THREE.Mesh)
-                  - distance : distance from camera to intersection (number)
-                  - face : intersected face (THREE.Face3)
-                  - faceIndex : intersected face index (number)
-                  - point : intersection point (THREE.Vector3)
-                  - uv : intersection point in the object's UV coordinates (THREE.Vector2)
-          */
-      }
-  
-  }
-
-
