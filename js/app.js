@@ -5,6 +5,7 @@ import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import Stats from '../three.js-master/examples/jsm/libs/stats.module.js';
 import { PointerLockControls } from '../three.js-master/examples/jsm/controls/PointerLockControls.js';
+import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 
@@ -74,10 +75,25 @@ function init() {
   //console.log(camera.position)
   // camera.position.z = 100;
 
+  
+    console.log(camera.position)
+  
+    //camera controls to allow for orbiting
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true; // creates a softer orbiting feel
+    controls.dampingFactor = 0.1; // determines how soft
+    controls.enableZoom = true;
+    controls.maxDistance = 33000; // 35847 magnitude of camera position vector
+    //controls.maxZoom = 1;
+    controls.maxPolarAngle = Math.PI / 2;
+    //controls.autoRotate = true;
+    controls.screenSpacePanning = true;
+
+
+
   controls = new PointerLockControls( camera, document.body );
 
   document.body.addEventListener( 'click', function () {
-    console.log("Come here!!!");
   } );
 
   document.body.addEventListener( 'keydown', function (e) {
@@ -87,15 +103,13 @@ function init() {
   } );
 
   document.body.addEventListener( 'keydown', function (e) {
-    console.log(e);
+    //console.log(e);
     if (e.key == "Escape") {
       console.log("escape pressed");
       blocker.style.display = 'block';  
       instructions.style.display = '';
     }
   } );
-
-
 
   document.body.addEventListener( 'keyup', function (e) {
     if (e.key == "Shift") {
@@ -226,8 +240,8 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/TriceratopsStyleExport5.glb', 
-    
+    gltfloader.load( './assets/220410_Test3.glb', 
+   
       function ( gltf ) {
 
       const model = gltf.scene;
@@ -235,6 +249,8 @@ const dracoLoader = new DRACOLoader();
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
       scene.fog = new THREE.Fog( 'black', 20, 3000 );
+
+      const testCam1 = new THREE.BoxGeometry(100,100,100,100,100,100)
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
@@ -276,7 +292,7 @@ const dracoLoader = new DRACOLoader();
 
 }
 
-// adds progress text while the model is loading
+/* // adds progress text while the model is loading
 function progressText( xhr ) {
   var progress, textNode, text;
 
@@ -295,7 +311,7 @@ function progressText( xhr ) {
   textNode = document.createTextNode(text);
   progress.appendChild(textNode)
   container.appendChild(progress)
-}
+} */
 
 function onPointerMove( event ) {
 
@@ -393,11 +409,13 @@ function render() {
 
 	// calculate objects intersecting the picking ray
 	const intersects = raycasterPointer.intersectObjects( scene.children, true );
+
   raycasterPointer.params.Points.threshold = 10; // don't know why threshold this high
 
+
   for ( let i = 0; i < intersects.length; i ++ ) {
-     //console.log(intersects [i] ); // this is not printing
-   //  intersects[i].object.material.color.set ("red");
+     console.log(intersects [i] ); // this is not printing
+   //intersects[i].object.material.color.set ("red");
 
   }
 
