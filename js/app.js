@@ -75,20 +75,18 @@ function init() {
   //console.log(camera.position)
   // camera.position.z = 100;
 
-  
-    console.log(camera.position)
-  
-    //camera controls to allow for orbiting
-    controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true; // creates a softer orbiting feel
-    controls.dampingFactor = 0.1; // determines how soft
-    controls.enableZoom = true;
-    controls.maxDistance = 33000; // 35847 magnitude of camera position vector
-    //controls.maxZoom = 1;
-    controls.maxPolarAngle = Math.PI / 2;
-    //controls.autoRotate = true;
-    controls.screenSpacePanning = true;
+  console.log(camera.position)
 
+  //camera controls to allow for orbiting
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // creates a softer orbiting feel
+  controls.dampingFactor = 0.1; // determines how soft
+  controls.enableZoom = true;
+  controls.maxDistance = 33000; // 35847 magnitude of camera position vector
+  //controls.maxZoom = 1;
+  controls.maxPolarAngle = Math.PI / 2;
+  //controls.autoRotate = true;
+  controls.screenSpacePanning = true;
 
 
   controls = new PointerLockControls( camera, document.body );
@@ -210,24 +208,24 @@ function init() {
   // floor 
   // TO DO REMOVE THIS AFTER TOPO MESH INCLUDED
 
-  let floorGeometry = new THREE.PlaneGeometry( 20000, 20000, 100, 1000 );
+  let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100000 );
   floorGeometry.rotateX( - Math.PI / 2 );
 
-  // vertex displacement
+  // // vertex displacement
 
-  let position = floorGeometry.attributes.position;
+  // let position = floorGeometry.attributes.position;
 
-  for ( let i = 0, l = position.count; i < l; i ++ ) {
+  // for ( let i = 0, l = position.count; i < l; i ++ ) {
 
-    vertex.fromBufferAttribute( position, i );
+  //   vertex.fromBufferAttribute( position, i );
 
-    vertex.x += Math.random() * 20 - 10;
-    vertex.y += Math.random() * 2;
-    vertex.z += Math.random() * 20 - 10;
+  //   vertex.x += Math.random() * 20 - 10;
+  //   vertex.y += Math.random() * 2;
+  //   vertex.z += Math.random() * 20 - 10;
 
-    position.setXYZ( i, vertex.x, vertex.y, vertex.z );
+  //   position.setXYZ( i, vertex.x, vertex.y, vertex.z );
 
-  }
+  // }
 
   const floorMaterial = new THREE.MeshBasicMaterial({'color':'grey'})
 
@@ -248,7 +246,7 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      scene.fog = new THREE.Fog( 'black', 20, 3000 );
+      //scene.fog = new THREE.Fog( 'black', 20, 3000 );
 
       const testCam1 = new THREE.BoxGeometry(100,100,100,100,100,100)
 
@@ -259,7 +257,10 @@ const dracoLoader = new DRACOLoader();
 
       // adding all the points in the "Scene" mesh
       // TODO: this is breakable!!!
-      objects = scene.children[2].children[0].children;
+      //objects = scene.children[2].children[0].children;
+      objects = scene.children[2]
+
+      console.log(scene.children[2])
 
       animate();
 
@@ -414,7 +415,7 @@ function render() {
 
 
   for ( let i = 0; i < intersects.length; i ++ ) {
-     console.log(intersects [i] ); // this is not printing
+    //console.log(intersects [i] ); // this is not printing
    //intersects[i].object.material.color.set ("red");
 
   }
@@ -453,7 +454,7 @@ function raycast ( e ) {
       var intersects = raycasterPointer.intersectObjects( scene.children );
   
       for ( var i = 0; i < intersects.length; i++ ) {
-          console.log( intersects[ i ] ); 
+          //console.log( intersects[ i ] ); 
           /*
               An intersection has the following properties :
                   - object : intersected object (THREE.Mesh)
