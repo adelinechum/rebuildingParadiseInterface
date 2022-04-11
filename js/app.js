@@ -154,7 +154,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220410_Test14.glb', function ( gltf ) {
+    gltfloader.load( './assets/220410_Test20.glb', function ( gltf ) {
 
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
@@ -163,6 +163,7 @@ const dracoLoader = new DRACOLoader();
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
+      mixer.timeScale=3; //Increased Animation Speed
 
       animate();
 
