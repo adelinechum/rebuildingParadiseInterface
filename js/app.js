@@ -38,7 +38,7 @@ var center;
 //console.log(window.location.href)
 
 init();
-animate();
+
 window.addEventListener( 'pointermove', onPointerMove);        
 window.requestAnimationFrame(render);
 
@@ -88,73 +88,12 @@ function init() {
   const light = new THREE.AmbientLight( 0x404040 ); // soft white light
   scene.add( light );
 
-
-  // load scene
-  var loader = new THREE.ObjectLoader();
-/*
-  loader.load(
-  	// resource URL
-  	"./assets/groundPoints.json",
-   // "./assets/camerasRenders.json",
-
-
-  	// onLoad callback
-  	function ( obj ) {
-      // remove the loading text
-      document.getElementById('progress').remove();
-      
-  		// assign the loaded object to the scene variable
-  		scene = obj;
-      console.log(scene.children);
-
-      console.log(scene);
-      scene.fog = new THREE.Fog( 'black', 20, 50000 );
-
-      //bounding box to get center of objects
-      var bbox = new THREE.Box3().setFromObject(obj);
-      //console.log(bbox);
-      center = new THREE.Vector3();
-      console.log(bbox.getCenter(center));
-      console.log(center);
-      controls.target = center;
-      console.log(scene.children);
-
-      //loop through to find camera names
-      scene.children.forEach(child => {
-        //console.log(child.name)
-        if (child.name.match('^liveCam')) {
-          liveCameras.push(child);
-        }
-      });
-
-      //loop through to find historical points
-      scene.children.forEach(child => {
-        if (child.name.match('^historicalPt')) {
-          historicalPts.push(child);
-        }
-      });
-
-  	},
-
-  	// onProgress callback
-  	 function ( xhr ) {
-      progressText( xhr ) // delete this if you don't want the progress text
-  	 },
-
-  	// onError callback
-  	function ( err ) {
-  		console.error( 'An error happened' );
-      console.log('error found');
-      console.log('ERROR FOUND: ' + err);
-  	}
-  );
-*/
 const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath( '../three.js-master/examples/js/libs/draco/gltf/' );
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220410_Test20.glb', function ( gltf ) {
+    gltfloader.load( './assets/220411_InterfaceModelExport.glb', function ( gltf ) {
 
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
@@ -230,30 +169,6 @@ function onWindowResize() {
 
   camera.aspect = container.clientWidth / container.clientHeight;
   renderer.setSize( container.clientWidth, container.clientHeight );
-
-}
-
-// animates the scene
-function animate() {
-
-// controls object jumping speed
-  sinCounter = sinCounter + (Math.PI / 32);
-
-  requestAnimationFrame( animate );
-  
-  controls.update();
-
-  // live cam & historical points animate
-  liveCameras.forEach(element => {
-    element.rotation.y -= 0.05;
-  });  
-//TO DO change to move up and down
-  historicalPts.forEach(element => {
-    //element.rotation.y -= 0.05;
-    element.translateY((Math.sin(sinCounter) * 25));
-  });  
- 
-  render();
 
 }
 
