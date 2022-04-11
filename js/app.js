@@ -42,7 +42,7 @@ animate();
 window.addEventListener( 'pointermove', onPointerMove);        
 window.requestAnimationFrame(render);
 
-const stats = new Stats();
+
 let mixer;
 
 var allChildren;
@@ -55,6 +55,10 @@ function init() {
   container = document.getElementById('container');
 
   // create the rendered and set it to the height/width of the container
+
+  //Testing additional animation 
+  const stats = new Stats();
+  container.appendChild( stats.dom );
   
   renderer = new THREE.WebGLRenderer();
   //renderer.setPixelRatio( window.devicePixelRatio );
@@ -80,6 +84,9 @@ function init() {
   controls.maxPolarAngle = Math.PI / 2;
   //controls.autoRotate = true;
   controls.screenSpacePanning = true;
+
+  const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  scene.add( light );
 
 
   // load scene
@@ -147,11 +154,11 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/TriceratopsStyleExport5.glb', function ( gltf ) {
+    gltfloader.load( './assets/220410_Test14.glb', function ( gltf ) {
 
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
-      model.scale.set( 0.01, 0.01, 0.01 );
+      model.scale.set( 0.5, 0.5, 0.5 );
       scene.add( model );
 
       mixer = new THREE.AnimationMixer( model );
