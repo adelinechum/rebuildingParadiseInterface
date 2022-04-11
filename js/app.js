@@ -17,6 +17,7 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const threshold = 0.1;
 var objects = [];
+var groundLimits = []
 
 var raycasterPointer = new THREE.Raycaster();
 var mouse = { x : 0, y : 0 };
@@ -40,7 +41,7 @@ const vertex = new THREE.Vector3();
 var center;
 
 //Bounding box to find center
- const box = new THREE.Box3()
+// const box = new THREE.Box3()
 //console.log(window.location.href)
 
 init();
@@ -71,7 +72,7 @@ function init() {
   camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 1, 50000 );
 
   // camera.maxDistance= 1000
-  camera.position.set(-1705,195,2500); // starting position of the camera
+  camera.position.set( -1705, 197, 2500); // starting position of the camera
   //console.log(camera.position)
   // camera.position.z = 100;
 
@@ -208,12 +209,13 @@ function init() {
   // floor 
   // TO DO REMOVE THIS AFTER TOPO MESH INCLUDED
 
-  // let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100000 );
-  // floorGeometry.rotateX( - Math.PI / 2 );
+  let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100000 );
+  floorGeometry.rotateX( - Math.PI / 2 );
 
-  // // vertex displacement
+  // vertex displacement
 
-  // let position = floorGeometry.attributes.position;
+  let position = floorGeometry.attributes.position;
+
 
   // for ( let i = 0, l = position.count; i < l; i ++ ) {
 
@@ -227,16 +229,23 @@ function init() {
 
   // }
 
-  // const floorMaterial = new THREE.MeshBasicMaterial({'color':'grey'})
+<<<<<<< HEAD
+  const floorMaterial = new THREE.MeshBasicMaterial({'color':'red'})
 
-  // const floor = new THREE.Mesh( floorGeometry, floorMaterial );
-  // scene.add( floor );
+  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+  scene.add( floor );
 
 // TODO change to livecameras
   const geometry = new THREE.BoxGeometry(100,100,100);
   const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
+=======
+  const floorMaterial = new THREE.MeshBasicMaterial({'color':'grey'})
+
+  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
+  scene.add( floor );
+>>>>>>> parent of c92d0c1 (finding center)
 
 // load scene
 const dracoLoader = new DRACOLoader();
@@ -244,7 +253,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220410_Test3.glb', 
+    gltfloader.load( './assets/220411_Test22.glb', 
    
       function ( gltf ) {
 
@@ -254,26 +263,19 @@ const dracoLoader = new DRACOLoader();
       scene.add( model );
       //scene.fog = new THREE.Fog( 'black', 20, 3000 );
 
-      //bounding box to get center of objects
-      var bbox = new THREE.Box3().setFromObject(model);
-
-      //console.log(bbox);
-      center = new THREE.Vector3();
-      console.log(bbox.getCenter(center));
-      controls.target = center;
-
-      console.log(center);
+      const testCam1 = new THREE.BoxGeometry(100,100,100,100,100,100)
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
 
-      console.log (scene.children);
+      console.log(scene.children);
 
       // adding all the points in the "Scene" mesh
       // TODO: this is breakable!!!
       //objects = scene.children[2].children[0].children;
-      objects = scene.children[2]
-      console.log(scene.children[1])
+<<<<<<< HEAD
+      //objects = scene.children[2]
+      //console.log(scene.children[])
 
       //loop through to find camera names
       scene.children.forEach(child => {
@@ -281,7 +283,12 @@ const dracoLoader = new DRACOLoader();
         if (child.name.match('^liveCam')) {
           liveCameras.push(child);
         }
-      });
+      })
+=======
+      objects = scene.children[2]
+
+      console.log(scene.children[2])
+>>>>>>> parent of c92d0c1 (finding center)
 
       animate();
 
