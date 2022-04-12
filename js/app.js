@@ -228,7 +228,7 @@ const dracoLoader = new DRACOLoader();
           }
         })
        });
-         
+      console.log(objects);
 
       animate();
 
@@ -353,7 +353,8 @@ function raycast ( e ) {
   
       raycaster.setFromCamera( pointer, camera );    
       var intersects = raycaster.intersectObjects( objects );
-
+      console.log(objects);
+      
       if ( intersects.length > 0 ) {
 
         //console.log(intersects[0]);
@@ -365,7 +366,7 @@ function raycast ( e ) {
           INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
           INTERSECTED.material.emissive.setHex( 0xffff00 );
 
-          console.log(INTERSECTED.material);
+          // console.log(INTERSECTED.material);
 
         }
 
