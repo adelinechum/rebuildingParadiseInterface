@@ -85,7 +85,17 @@
 
 					scene.add( object );
 
+					
+
+
+
 				}
+
+				console.log(scene.children[0]);
+				console.log(scene.children[1]);
+				console.log(scene.children[2]);
+				console.log(scene.children[3]);
+				console.log(scene.children[4]);
 
 				raycaster = new THREE.Raycaster();
 
@@ -150,7 +160,7 @@
 				const intersects = raycaster.intersectObjects( scene.children, false );
 
 				if ( intersects.length > 0 ) {
-					console.log(intersects);
+					// console.log(intersects);
 
 					if ( INTERSECTED != intersects[ 0 ].object ) {
 
