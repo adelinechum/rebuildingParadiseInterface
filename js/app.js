@@ -18,6 +18,7 @@ const pointer = new THREE.Vector2();
 const threshold = 0.1;
 var objects = [];
 var groundLimits = []
+let INTERSECTED;
 
 var mouse = { x : 0, y : 0 };
 
@@ -35,6 +36,7 @@ let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
+const staticCamHeight = 150;
 
 //center of bounding box
 var center;
@@ -71,26 +73,23 @@ function init() {
   camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
   console.log(camera.position)
   // camera.maxDistance= 1000
-  camera.position.set( -1500, 200, 2500); // starting position of the camera
+  camera.position.set( -1500, staticCamHeight, 2500); // starting position of the camera
   
   
 
-  //camera controls to allow for orbiting
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true; // creates a softer orbiting feel
-  controls.dampingFactor = 0.1; // determines how soft
-  controls.enableZoom = true;
-  controls.maxDistance = 33000; // 35847 magnitude of camera position vector
-  //controls.maxZoom = 1;
-  controls.maxPolarAngle = Math.PI / 2;
-  //controls.autoRotate = true;
-  controls.screenSpacePanning = true;
+  // //camera controls to allow for orbiting
+  // controls = new OrbitControls(camera, renderer.domElement);
+  // controls.enableDamping = true; // creates a softer orbiting feel
+  // controls.dampingFactor = 0.1; // determines how soft
+  // controls.enableZoom = true;
+  // controls.maxDistance = 33000; // 35847 magnitude of camera position vector
+  // //controls.maxZoom = 1;
+  // controls.maxPolarAngle = Math.PI / 2;
+  // //controls.autoRotate = true;
+  // controls.screenSpacePanning = true;
 
 
   controls = new PointerLockControls( camera, document.body );
-
-  document.body.addEventListener( 'click', function () {
-  } );
 
   document.body.addEventListener( 'keydown', function (e) {
     if (e.key == "Shift") {
@@ -193,24 +192,8 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown );
   document.addEventListener( 'keyup', onKeyUp );
 
-  
-  renderer.domElement.addEventListener( 'click', raycast, false );
-
-  // floor 
-
-  // let planeMesh = new THREE.Mesh( 
-  //   new THREE.PlaneGeometry( 10000, 10000 ), 
-  //   new THREE.MeshBasicMaterial() );
-  //   planeMesh.rotation.set(-Math.PI/2, Math.PI/2000, Math.PI); 
-  // // y is the vertical plane
-  //  planeMesh.position.y += 100;
-  //  scene.add( planeMesh );
-
-// TODO change to livecameras
-  const geometry = new THREE.BoxGeometry(100,100,100);
-  const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  const cube = new THREE.Mesh( geometry, material );
-  scene.add( cube );
+  //renderer.domElement.addEventListener( 'click', raycast, false );
+  renderer.domElement.addEventListener( 'pointermove', raycast, false );
 
 // load scene
 const dracoLoader = new DRACOLoader();
@@ -228,28 +211,24 @@ const dracoLoader = new DRACOLoader();
       scene.add( model );
       //scene.fog = new THREE.Fog( 'black', 20, 3000 );
 
-      const testCam1 = new THREE.BoxGeometry(100,100,100,100,100,100)
-
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
 
-      console.log(scene.children);
+      //objects = scene.children[2].children;
+      //console.log(objects);
+      //console.log(scene.children)
 
-      // adding all the points in the "Scene" mesh
-      // TODO: this is breakable!!!
-      //objects = scene.children[2].children[0].children;
-      //console.log(scene.children[])
+       //loop through to find renderView names
+       scene.children.forEach(child => {
+        child.children.forEach(grandchild => {
 
-      objects = scene.children[2].children;
-      console.log(objects);
+          if (grandchild.name.match('^0')) {
+            objects.push(grandchild);
 
-      //loop through to find camera names
-      scene.children.forEach(child => {
-        console.log(child.name)
-        if (child.name.match('^liveCam')) {
-          liveCameras.push(child);
-        }
-      })
+          }
+        })
+       });
+         
 
       animate();
 
@@ -262,6 +241,7 @@ const dracoLoader = new DRACOLoader();
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
+  
   document.addEventListener( 'pointermove', onPointerMove );
 
   function animate() {
@@ -282,26 +262,6 @@ const dracoLoader = new DRACOLoader();
 
 }
 
-/* // adds progress text while the model is loading
-function progressText( xhr ) {
-  var progress, textNode, text;
-
-  if (document.getElementById('progress')) {
-    document.getElementById('progress').remove();
-  }
-
-  if (xhr.lengthComputable) {
-    text = 'loading: ' + Math.round((xhr.loaded / xhr.total * 100)) + '%'
-  } else {
-    text = 'loading: ' + Math.round(xhr.loaded / 1000) + 'kb'
-  }
-
-  progress = document.createElement('DIV');
-  progress.id = 'progress';
-  textNode = document.createTextNode(text);
-  progress.appendChild(textNode)
-  container.appendChild(progress)
-} */
 
 function onPointerMove( event ) {
 
@@ -325,53 +285,54 @@ function animate() {
 
   const time = performance.now();
 
-  if ( controls.isLocked === true ) {
+  // raycast of camera body with objects not pointer
+    if ( controls.isLocked === true ) {
 
-    raycaster.ray.origin.copy( controls.getObject().position );
-    raycaster.ray.origin.y -= 10;
-    //raycaster.ray.origin.y += 100;
+      raycaster.ray.origin.copy( controls.getObject().position );
+      raycaster.ray.origin.y -= 10;
+      //raycaster.ray.origin.y += 100;
 
-    const intersections = raycaster.intersectObjects( objects, false );
+      const intersections = raycaster.intersectObjects( objects, false );
 
-    const onObject = intersections.length > 0;
+      const onObject = intersections.length > 0;
 
-    const delta = ( time - prevTime ) / 1000;
+      const delta = ( time - prevTime ) / 1000;
 
-    velocity.x -= velocity.x * 1.0 * delta;
-    velocity.z -= velocity.z * 1.0 * delta;
+      velocity.x -= velocity.x * 1.0 * delta;
+      velocity.z -= velocity.z * 1.0 * delta;
 
-    velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-    direction.z = Number( moveForward ) - Number( moveBackward );
-    direction.x = Number( moveRight ) - Number( moveLeft );
-    direction.normalize(); // this ensures consistent movements in all directions
+      direction.z = Number( moveForward ) - Number( moveBackward );
+      direction.x = Number( moveRight ) - Number( moveLeft );
+      direction.normalize(); // this ensures consistent movements in all directions
 
-    if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
-    if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
+      if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
+      if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
 
-    if ( onObject === true ) {
-      console.log("intesected with object!");
+      if ( onObject === true ) {
+        console.log("intesected with object!");
 
-      velocity.y = Math.max( 0, velocity.y );
-      canJump = true;
+        //velocity.y = Math.max( 0, velocity.y );
+        canJump = true;
+
+      }
+
+      controls.moveRight( - velocity.x * delta );
+      controls.moveForward( - velocity.z * delta );
+
+      controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+
+      // floor lower bounding limits
+      if ( controls.getObject().position.y < staticCamHeight) {
+
+        velocity.y = 0;
+        controls.getObject().position.y = staticCamHeight;
+        canJump = true;
+
+      }
 
     }
-
-    controls.moveRight( - velocity.x * delta );
-    controls.moveForward( - velocity.z * delta );
-
-    controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-
-    if ( controls.getObject().position.y < 100 ) {
-
-      velocity.y = 0;
-      controls.getObject().position.y = 100;
-
-      canJump = true;
-
-    }
-
-  }
   
   //controls.update();
   
@@ -387,50 +348,39 @@ function render() {
   renderer.render( scene, camera ); 
 }
 
+// object hover to highlight
 function raycast ( e ) {
-  // Step 1: Detect light helper
-      //1. sets the mouse position with a coordinate system where the center
-      //   of the screen is the origin
-      // mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      // mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
   
-      // //2. set the picking ray from the camera position and mouse coordinates
-      // //raycaster.setFromCamera( mouse, camera );    
-  
-      // //3. compute intersections (note the 2nd parameter)
-      // //var intersects = raycaster.intersectObjects( scene.children, true );
-      // raycaster.params.Points.threshold = 10; // don't know why threshold this high
-  
-      // // for ( var i = 0; i < intersects.length; i++ ) {
-      // //     console.log( intersects[ i ] ); 
-
-      // }
-  // Step 2: Detect normal objects
-      //1. sets the mouse position with a coordinate system where the center of the screen is the origin
-      mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
-  
-      //2. set the picking ray from the camera position and mouse coordinates
-      raycaster.setFromCamera( mouse, camera );    
-  
-      //3. compute intersections (no 2nd parameter true anymore)
+      raycaster.setFromCamera( pointer, camera );    
       var intersects = raycaster.intersectObjects( objects );
-      console.log(objects);
 
-  
-      for ( var i = 0; i < intersects.length; i++ ) {
-          console.log( intersects[ i ] ); 
-          /*
-              An intersection has the following properties :
-                  - object : intersected object (THREE.Mesh)
-                  - distance : distance from camera to intersection (number)
-                  - face : intersected face (THREE.Face3)
-                  - faceIndex : intersected face index (number)
-                  - point : intersection point (THREE.Vector3)
-                  - uv : intersection point in the object's UV coordinates (THREE.Vector2)
-          */
+      if ( intersects.length > 0 ) {
+
+        //console.log(intersects[0]);
+
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+
+          if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+          INTERSECTED = intersects[ 0 ].object;
+          INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+          INTERSECTED.material.emissive.setHex( 0xffff00 );
+
+          console.log(INTERSECTED.material);
+
+        }
+
+      } else {
+
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+        INTERSECTED = null;
+
       }
-  
+
+
+      //  ( var i = 0; i < intersects.length; i++ ) {
+      //   console.log( intersects[ i ] );
+      //   intersects[i].currentHex
+      //  }
   }
 
 

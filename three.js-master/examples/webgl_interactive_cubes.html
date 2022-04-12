@@ -150,6 +150,7 @@
 				const intersects = raycaster.intersectObjects( scene.children, false );
 
 				if ( intersects.length > 0 ) {
+					console.log(intersects);
 
 					if ( INTERSECTED != intersects[ 0 ].object ) {
 
