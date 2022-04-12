@@ -19,7 +19,6 @@ const threshold = 0.1;
 var objects = [];
 var groundLimits = []
 
-var raycasterPointer = new THREE.Raycaster();
 var mouse = { x : 0, y : 0 };
 
 var liveCameras = []
@@ -69,14 +68,12 @@ function init() {
   container.appendChild( renderer.domElement );
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 1, 50000 );
-
-  // camera.maxDistance= 1000
-  camera.position.set( -1705, 197, 2500); // starting position of the camera
-  //console.log(camera.position)
-  // camera.position.z = 100;
-
+  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
   console.log(camera.position)
+  // camera.maxDistance= 1000
+  camera.position.set( -1500, 200, 2500); // starting position of the camera
+  
+  
 
   //camera controls to allow for orbiting
   controls = new OrbitControls(camera, renderer.domElement);
@@ -129,13 +126,6 @@ function init() {
     blocker.style.display = 'none';
 
   } );
-
-  // controls.addEventListener( 'unlock', function () {
-
-  //   blocker.style.display = 'block';
-  //   instructions.style.display = '';
-
-  // } );
 
   scene.add( controls.getObject() );
 
@@ -203,49 +193,24 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown );
   document.addEventListener( 'keyup', onKeyUp );
 
-  raycasterPointer = new THREE.Raycaster();
+  
   renderer.domElement.addEventListener( 'click', raycast, false );
 
   // floor 
-  // TO DO REMOVE THIS AFTER TOPO MESH INCLUDED
 
-  let floorGeometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100000 );
-  floorGeometry.rotateX( - Math.PI / 2 );
-
-  // vertex displacement
-
-  let position = floorGeometry.attributes.position;
-
-
-  // for ( let i = 0, l = position.count; i < l; i ++ ) {
-
-  //   vertex.fromBufferAttribute( position, i );
-
-  //   vertex.x += Math.random() * 20 - 10;
-  //   vertex.y += Math.random() * 2;
-  //   vertex.z += Math.random() * 20 - 10;
-
-  //   position.setXYZ( i, vertex.x, vertex.y, vertex.z );
-
-  // }
-
-<<<<<<< HEAD
-  const floorMaterial = new THREE.MeshBasicMaterial({'color':'red'})
-
-  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
-  scene.add( floor );
+  // let planeMesh = new THREE.Mesh( 
+  //   new THREE.PlaneGeometry( 10000, 10000 ), 
+  //   new THREE.MeshBasicMaterial() );
+  //   planeMesh.rotation.set(-Math.PI/2, Math.PI/2000, Math.PI); 
+  // // y is the vertical plane
+  //  planeMesh.position.y += 100;
+  //  scene.add( planeMesh );
 
 // TODO change to livecameras
   const geometry = new THREE.BoxGeometry(100,100,100);
   const material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   const cube = new THREE.Mesh( geometry, material );
   scene.add( cube );
-=======
-  const floorMaterial = new THREE.MeshBasicMaterial({'color':'grey'})
-
-  const floor = new THREE.Mesh( floorGeometry, floorMaterial );
-  scene.add( floor );
->>>>>>> parent of c92d0c1 (finding center)
 
 // load scene
 const dracoLoader = new DRACOLoader();
@@ -253,7 +218,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220411_Test22.glb', 
+    gltfloader.load( './assets/220411_InterfaceModelExport.glb', 
    
       function ( gltf ) {
 
@@ -273,22 +238,18 @@ const dracoLoader = new DRACOLoader();
       // adding all the points in the "Scene" mesh
       // TODO: this is breakable!!!
       //objects = scene.children[2].children[0].children;
-<<<<<<< HEAD
-      //objects = scene.children[2]
       //console.log(scene.children[])
+
+      objects = scene.children[2].children;
+      console.log(objects);
 
       //loop through to find camera names
       scene.children.forEach(child => {
-        //console.log(child.name)
+        console.log(child.name)
         if (child.name.match('^liveCam')) {
           liveCameras.push(child);
         }
       })
-=======
-      objects = scene.children[2]
-
-      console.log(scene.children[2])
->>>>>>> parent of c92d0c1 (finding center)
 
       animate();
 
@@ -360,9 +321,6 @@ function onWindowResize() {
 // animates the scene
 function animate() {
 
-// controls object jumping speed
-  sinCounter = sinCounter + (Math.PI / 32);
-
   requestAnimationFrame( animate );
 
   const time = performance.now();
@@ -371,6 +329,7 @@ function animate() {
 
     raycaster.ray.origin.copy( controls.getObject().position );
     raycaster.ray.origin.y -= 10;
+    //raycaster.ray.origin.y += 100;
 
     const intersections = raycaster.intersectObjects( objects, false );
 
@@ -403,10 +362,10 @@ function animate() {
 
     controls.getObject().position.y += ( velocity.y * delta ); // new behavior
 
-    if ( controls.getObject().position.y < 10 ) {
+    if ( controls.getObject().position.y < 100 ) {
 
       velocity.y = 0;
-      controls.getObject().position.y = 10;
+      controls.getObject().position.y = 100;
 
       canJump = true;
 
@@ -415,16 +374,6 @@ function animate() {
   }
   
   //controls.update();
-
-  // live cam & historical points animate
-  liveCameras.forEach(element => {
-    element.rotation.y -= 0.05;
-  });  
-
-  historicalPts.forEach(element => {
-    //element.rotation.y -= 0.05;
-    element.translateY((Math.sin(sinCounter) * 25));
-  });  
   
   prevTime = time;
   //console.log(camera.position)
@@ -432,23 +381,9 @@ function animate() {
 
 }
 
-function render() { 
-  // update the picking ray with the camera and pointer position
-	raycasterPointer.setFromCamera( pointer, camera );
+function render() {
 
-	// calculate objects intersecting the picking ray
-	const intersects = raycasterPointer.intersectObjects( scene.children, true );
-
-  raycasterPointer.params.Points.threshold = 10; // don't know why threshold this high
-
-
-  for ( let i = 0; i < intersects.length; i ++ ) {
-    //console.log(intersects [i] ); // this is not printing
-   //intersects[i].object.material.color.set ("red");
-
-  }
-
-  //controls.update( clock.getDelta() );
+  // //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
 }
 
@@ -456,33 +391,35 @@ function raycast ( e ) {
   // Step 1: Detect light helper
       //1. sets the mouse position with a coordinate system where the center
       //   of the screen is the origin
-      mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-      mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+      // mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
+      // mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
   
-      //2. set the picking ray from the camera position and mouse coordinates
-      raycasterPointer.setFromCamera( mouse, camera );    
+      // //2. set the picking ray from the camera position and mouse coordinates
+      // //raycaster.setFromCamera( mouse, camera );    
   
-      //3. compute intersections (note the 2nd parameter)
-      var intersects = raycasterPointer.intersectObjects( scene.children, true );
-      raycasterPointer.params.Points.threshold = 10; // don't know why threshold this high
+      // //3. compute intersections (note the 2nd parameter)
+      // //var intersects = raycaster.intersectObjects( scene.children, true );
+      // raycaster.params.Points.threshold = 10; // don't know why threshold this high
   
-      for ( var i = 0; i < intersects.length; i++ ) {
-          console.log( intersects[ i ] ); 
+      // // for ( var i = 0; i < intersects.length; i++ ) {
+      // //     console.log( intersects[ i ] ); 
 
-      }
+      // }
   // Step 2: Detect normal objects
       //1. sets the mouse position with a coordinate system where the center of the screen is the origin
       mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
       mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
   
       //2. set the picking ray from the camera position and mouse coordinates
-      raycasterPointer.setFromCamera( mouse, camera );    
+      raycaster.setFromCamera( mouse, camera );    
   
       //3. compute intersections (no 2nd parameter true anymore)
-      var intersects = raycasterPointer.intersectObjects( scene.children );
+      var intersects = raycaster.intersectObjects( objects );
+      console.log(objects);
+
   
       for ( var i = 0; i < intersects.length; i++ ) {
-          //console.log( intersects[ i ] ); 
+          console.log( intersects[ i ] ); 
           /*
               An intersection has the following properties :
                   - object : intersected object (THREE.Mesh)
