@@ -75,8 +75,6 @@ function init() {
   // camera.maxDistance= 1000
   camera.position.set( -1500, staticCamHeight, 2500); // starting position of the camera
   
-  
-
   // //camera controls to allow for orbiting
   // controls = new OrbitControls(camera, renderer.domElement);
   // controls.enableDamping = true; // creates a softer orbiting feel
@@ -209,7 +207,7 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      //scene.fog = new THREE.Fog( 'black', 20, 3000 );
+      scene.fog = new THREE.Fog( 'black', 150, 2200 );
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
@@ -413,10 +411,6 @@ function renderView ( e ) {
       e.style.display = 'none';
     })
   }
-
-  
-
-
 
   //AC HERE need to call renders
 
