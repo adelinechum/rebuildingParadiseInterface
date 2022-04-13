@@ -192,7 +192,7 @@ function init() {
   document.addEventListener( 'keydown', onKeyDown );
   document.addEventListener( 'keyup', onKeyUp );
 
-  //renderer.domElement.addEventListener( 'click', raycast, false );
+  renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
 
 // load scene
@@ -228,6 +228,16 @@ const dracoLoader = new DRACOLoader();
           }
         })
        });
+
+
+       //loop to rename renderViews 
+       objects.forEach(element => {
+
+        //naming files here
+
+       });
+
+
       console.log(objects);
 
       animate();
@@ -353,35 +363,80 @@ function raycast ( e ) {
   
       raycaster.setFromCamera( pointer, camera );    
       var intersects = raycaster.intersectObjects( objects );
-      console.log(objects);
+      // console.log(objects);
       
+      // if there are intersections
       if ( intersects.length > 0 ) {
 
         //console.log(intersects[0]);
 
+        // if INTERSECTED is new
         if ( INTERSECTED != intersects[ 0 ].object ) {
 
+          // if INTERSECTED is saved, set it to it's original colour
           if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+          // set new INTERSECTED
           INTERSECTED = intersects[ 0 ].object;
+          // save original colour
           INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+          // set new colour
           INTERSECTED.material.emissive.setHex( 0xffff00 );
 
           // console.log(INTERSECTED.material);
 
         }
 
-      } else {
+      } else {//else there are no intersections
 
+        // if we have an INTSERSECTED saved, set it to original colour and remove INTERSECTED
         if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
         INTERSECTED = null;
 
       }
 
-
-      //  ( var i = 0; i < intersects.length; i++ ) {
-      //   console.log( intersects[ i ] );
-      //   intersects[i].currentHex
-      //  }
   }
+
+  // object click to view render
+function renderView ( e ) {
+
+  if (INTERSECTED) {
+    console.log(INTERSECTED.name);
+    var image = document.getElementById(INTERSECTED.name);
+    image.style.display = 'flex';
+  }
+  else{
+
+    // console.log(document.getElementsByClassName("displayImages"));
+
+    Array.from(document.getElementsByClassName("displayImages")).forEach(function (e) {
+      e.style.display = 'none';
+    })
+  }
+
+  
+
+
+
+  //AC HERE need to call renders
+
+}
+
+function goTo(paramater) {
+  console.log("go to");
+  switch (paramater) {
+    case 1:
+      // go to 1 location
+      break;
+
+    case 2:
+      // go to 2 location
+    break;
+  
+    default:
+      break;
+  }
+}
+
 
 
