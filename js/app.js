@@ -4,11 +4,17 @@ import { Color } from '../three.js-master/build/three.module.js';
 import * as THREE from '../three.js-master/examples/build/three.module.js';
 
 import Stats from '../three.js-master/examples/jsm/libs/stats.module.js';
-import { PointerLockControls } from '../three.js-master/examples/jsm/controls/PointerLockControls.js';
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 
+import { Flow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
+import { InstancedFlow } from '../three.js-master/examples/jsm/modifiers/CurveModifier.js';
+
+// TO DO 
+//First Person Ref: https://threejs.org/examples/?q=pointer#misc_controls_pointerlock
+//Loading multiple files: https://redstapler.co/load-multiple-model-three-js-promise/
+// for cars https://hofk.de/main/discourse.threejs/2021/MotionAlongCurve/MotionAlongCurve.html
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
@@ -16,6 +22,7 @@ const clock = new THREE.Clock();
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const threshold = 0.1;
+
 var objects = [];
 var groundLimits = []
 let INTERSECTED;
@@ -43,14 +50,14 @@ var center;
 
 //Bounding box to find center
 // const box = new THREE.Box3()
+
 //console.log(window.location.href)
 
 init();
-animate();
+
 window.addEventListener( 'pointermove', onPointerMove);        
 window.requestAnimationFrame(render);
 
-const stats = new Stats();
 let mixer;
 
 var allChildren;
@@ -63,6 +70,11 @@ function init() {
   container = document.getElementById('container');
 
   // create the rendered and set it to the height/width of the container
+
+  //Testing additional animation 
+  const stats = new Stats();
+  container.appendChild( stats.dom );
+  
   renderer = new THREE.WebGLRenderer();
   //renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -73,6 +85,10 @@ function init() {
   camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
   console.log(camera.position)
   // camera.maxDistance= 1000
+
+  const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  scene.add( light );
+
   camera.position.set( -1500, staticCamHeight, 2500); // starting position of the camera
   
   // //camera controls to allow for orbiting
@@ -85,7 +101,6 @@ function init() {
   // controls.maxPolarAngle = Math.PI / 2;
   // //controls.autoRotate = true;
   // controls.screenSpacePanning = true;
-
 
   controls = new PointerLockControls( camera, document.body );
 
@@ -199,18 +214,21 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
+
     gltfloader.load( './assets/220411_InterfaceModelExport.glb', 
    
       function ( gltf ) {
 
       const model = gltf.scene;
       model.position.set( 1, 1, 0 );
-      model.scale.set( 0.05, 0.05, 0.05 );
+      model.scale.set( 0.5, 0.5, 0.5 );
       scene.add( model );
+
       scene.fog = new THREE.Fog( 'black', 150, 2200 );
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
+      mixer.timeScale=3; //Increased Animation Speed
 
       //objects = scene.children[2].children;
       //console.log(objects);
@@ -234,8 +252,7 @@ const dracoLoader = new DRACOLoader();
         //naming files here
 
        });
-
-
+  
       console.log(objects);
 
       animate();
@@ -244,8 +261,7 @@ const dracoLoader = new DRACOLoader();
 
       console.error( e );
 
-    },
- );
+    } );
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
@@ -260,7 +276,7 @@ const dracoLoader = new DRACOLoader();
   
     mixer.update( delta );
   
-    //controls.update();
+    controls.update();
   
     stats.update();
   
@@ -269,7 +285,6 @@ const dracoLoader = new DRACOLoader();
   }
 
 }
-
 
 function onPointerMove( event ) {
 
@@ -411,11 +426,9 @@ function renderView ( e ) {
       e.style.display = 'none';
     })
   }
-
-  //AC HERE need to call renders
-
 }
 
+ //AC HERE need to call renders
 function goTo(paramater) {
   console.log("go to");
   switch (paramater) {
@@ -431,6 +444,3 @@ function goTo(paramater) {
       break;
   }
 }
-
-
-
