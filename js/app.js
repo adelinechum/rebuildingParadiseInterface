@@ -211,6 +211,7 @@ const dracoLoader = new DRACOLoader();
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
+      mixer.timeScale=2; //Increased Animation Speed
 
       //objects = scene.children[2].children;
       //console.log(objects);
