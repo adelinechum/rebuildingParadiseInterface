@@ -40,7 +40,6 @@ const staticCamHeight = 150;
 
 //center of bounding box
 var center;
-
 //Bounding box to find center
 // const box = new THREE.Box3()
 //console.log(window.location.href)
@@ -73,7 +72,7 @@ function init() {
   camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
   console.log(camera.position)
   // camera.maxDistance= 1000
-  camera.position.set( -1500, staticCamHeight, 2500); // starting position of the camera
+  camera.position.set( -1700, staticCamHeight, 1700); // starting position of the camera
   
   // //camera controls to allow for orbiting
   // controls = new OrbitControls(camera, renderer.domElement);
@@ -213,10 +212,6 @@ const dracoLoader = new DRACOLoader();
       mixer.clipAction( gltf.animations[ 0 ] ).play();
       mixer.timeScale=2; //Increased Animation Speed
 
-      //objects = scene.children[2].children;
-      //console.log(objects);
-      //console.log(scene.children)
-
        //loop through to find renderView names
        scene.children.forEach(child => {
         child.children.forEach(grandchild => {
@@ -228,19 +223,9 @@ const dracoLoader = new DRACOLoader();
         })
        });
 
-
-       //loop to rename renderViews 
-       objects.forEach(element => {
-
-        //naming files here
-
-       });
-
-
       console.log(objects);
 
       animate();
-
     }, undefined, function ( e ) {
 
       console.error( e );
@@ -299,7 +284,6 @@ function animate() {
 
       raycaster.ray.origin.copy( controls.getObject().position );
       raycaster.ray.origin.y -= 10;
-      //raycaster.ray.origin.y += 100;
 
       const intersections = raycaster.intersectObjects( objects, false );
 
@@ -352,6 +336,8 @@ function animate() {
 }
 
 function render() {
+  console.log(camera.position);
+  console.log(camera.lookAt);
 
   // //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
@@ -382,8 +368,6 @@ function raycast ( e ) {
           // set new colour
           INTERSECTED.material.emissive.setHex( 0xffff00 );
 
-          // console.log(INTERSECTED.material);
-
         }
 
       } else {//else there are no intersections
@@ -412,11 +396,10 @@ function renderView ( e ) {
       e.style.display = 'none';
     })
   }
-
-  //AC HERE need to call renders
-
 }
 
+  //AC HERE need to call renders 
+  // TODO call function from html not working
 function goTo(paramater) {
   console.log("go to");
   switch (paramater) {
@@ -426,6 +409,26 @@ function goTo(paramater) {
 
     case 2:
       // go to 2 location
+    break;
+
+    case 3:
+      // go to 3 location
+    break;
+
+    case 4:
+      // go to 4 location
+    break;
+
+    case 5:
+      // go to 5 location
+    break;
+
+    case 6:
+      // go to 6 location
+    break;
+
+    case 7:
+      // go to 7 location
     break;
   
     default:
