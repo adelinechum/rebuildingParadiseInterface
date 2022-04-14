@@ -336,8 +336,8 @@ function animate() {
 }
 
 function render() {
-  console.log(camera.position);
-  console.log(camera.lookAt);
+  //console.log(camera.position);
+  //console.log(camera.lookAt);
 
   // //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
