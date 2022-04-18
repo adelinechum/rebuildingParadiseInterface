@@ -65,7 +65,7 @@ function init() {
   renderer = new THREE.WebGLRenderer();
   //renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
-  renderer.setClearColor ('black', 1); // this is the background color seen while scene is loading
+  renderer.setClearColor ('white', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
