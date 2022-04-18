@@ -8,7 +8,7 @@ import { PointerLockControls } from '../three.js-master/examples/jsm/controls/Po
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
-
+import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
@@ -36,7 +36,7 @@ let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
-const staticCamHeight = 150;
+const staticCamHeight = 200;
 
 //center of bounding box
 var center;
@@ -69,125 +69,130 @@ function init() {
   container.appendChild( renderer.domElement );
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
+  camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
   console.log(camera.position)
   // camera.maxDistance= 1000
-  camera.position.set( -1700, staticCamHeight, 1700); // starting position of the camera
-  
-  // //camera controls to allow for orbiting
-  // controls = new OrbitControls(camera, renderer.domElement);
-  // controls.enableDamping = true; // creates a softer orbiting feel
-  // controls.dampingFactor = 0.1; // determines how soft
-  // controls.enableZoom = true;
-  // controls.maxDistance = 33000; // 35847 magnitude of camera position vector
-  // //controls.maxZoom = 1;
-  // controls.maxPolarAngle = Math.PI / 2;
-  // //controls.autoRotate = true;
-  // controls.screenSpacePanning = true;
+  camera.position.set( -960, 200, 545); // starting position of the camera
 
+  controls = new MapControls( camera, renderer.domElement );
 
-  controls = new PointerLockControls( camera, document.body );
+  //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.1;
+ // controls.autoRotate = true
+  //controls.maxDistance = 33000; // 35847 magnitude of camera position vector
+  controls.maxZoom = 1;
+  controls.maxPolarAngle = Math.PI / 2;
 
-  document.body.addEventListener( 'keydown', function (e) {
-    if (e.key == "Shift") {
-      controls.unlock();
-    }
-  } );
+  controls.screenSpacePanning = false;
 
-  document.body.addEventListener( 'keydown', function (e) {
-    //console.log(e);
-    if (e.key == "Escape") {
-      console.log("escape pressed");
-      blocker.style.display = 'block';  
-      instructions.style.display = '';
-    }
-  } );
+  controls.minDistance = 100;
+  controls.maxDistance = 500;
 
-  document.body.addEventListener( 'keyup', function (e) {
-    if (e.key == "Shift") {
-      controls.lock();
-    }
-  } );
+  controls.maxPolarAngle = Math.PI / 2;
 
-  const blocker = document.getElementById( 'blocker' );
-  const instructions = document.getElementById( 'instructions' );
+  // controls = new PointerLockControls( camera, document.body );
 
-  instructions.addEventListener( 'click', function () {
-    controls.lock();
-  } );
+  // document.body.addEventListener( 'keydown', function (e) {
+  //   if (e.key == "Shift") {
+  //     controls.unlock();
+  //   }
+  // } );
 
-  controls.addEventListener( 'lock', function () {
+  // document.body.addEventListener( 'keydown', function (e) {
+  //   //console.log(e);
+  //   if (e.key == "Escape") {
+  //     console.log("escape pressed");
+  //     blocker.style.display = 'block';  
+  //     instructions.style.display = '';
+  //   }
+  // } );
 
-    instructions.style.display = 'none';
-    blocker.style.display = 'none';
+  // document.body.addEventListener( 'keyup', function (e) {
+  //   if (e.key == "Shift") {
+  //     controls.lock();
+  //   }
+  // } );
 
-  } );
+  // const blocker = document.getElementById( 'blocker' );
+  // const instructions = document.getElementById( 'instructions' );
 
-  scene.add( controls.getObject() );
+  // instructions.addEventListener( 'click', function () {
+  //   controls.lock();
+  // } );
 
-  const onKeyDown = function ( event ) {
+  // controls.addEventListener( 'lock', function () {
 
-    switch ( event.code ) {
+  //   instructions.style.display = 'none';
+  //   blocker.style.display = 'none';
 
-      case 'ArrowUp':
-      case 'KeyW':
-        moveForward = true;
-        break;
+  // } );
 
-      case 'ArrowLeft':
-      case 'KeyA':
-        moveLeft = true;
-        break;
+  // scene.add( controls.getObject() );
 
-      case 'ArrowDown':
-      case 'KeyS':
-        moveBackward = true;
-        break;
+  // const onKeyDown = function ( event ) {
 
-      case 'ArrowRight':
-      case 'KeyD':
-        moveRight = true;
-        break;
+  //   switch ( event.code ) {
 
-      case 'Space':
-        if ( canJump === true ) velocity.y += 350;
-        canJump = false;
-        break;
+  //     case 'ArrowUp':
+  //     case 'KeyW':
+  //       moveForward = true;
+  //       break;
 
-    }
+  //     case 'ArrowLeft':
+  //     case 'KeyA':
+  //       moveLeft = true;
+  //       break;
 
-  };
+  //     case 'ArrowDown':
+  //     case 'KeyS':
+  //       moveBackward = true;
+  //       break;
 
-  const onKeyUp = function ( event ) {
+  //     case 'ArrowRight':
+  //     case 'KeyD':
+  //       moveRight = true;
+  //       break;
 
-    switch ( event.code ) {
+  //     case 'Space':
+  //       if ( canJump === true ) velocity.y += 350;
+  //       canJump = false;
+  //       break;
 
-      case 'ArrowUp':
-      case 'KeyW':
-        moveForward = false;
-        break;
+  //   }
 
-      case 'ArrowLeft':
-      case 'KeyA':
-        moveLeft = false;
-        break;
+  // };
 
-      case 'ArrowDown':
-      case 'KeyS':
-        moveBackward = false;
-        break;
+  // const onKeyUp = function ( event ) {
 
-      case 'ArrowRight':
-      case 'KeyD':
-        moveRight = false;
-        break;
+  //   switch ( event.code ) {
 
-    }
+  //     case 'ArrowUp':
+  //     case 'KeyW':
+  //       moveForward = false;
+  //       break;
 
-  };
+  //     case 'ArrowLeft':
+  //     case 'KeyA':
+  //       moveLeft = false;
+  //       break;
 
-  document.addEventListener( 'keydown', onKeyDown );
-  document.addEventListener( 'keyup', onKeyUp );
+  //     case 'ArrowDown':
+  //     case 'KeyS':
+  //       moveBackward = false;
+  //       break;
+
+  //     case 'ArrowRight':
+  //     case 'KeyD':
+  //       moveRight = false;
+  //       break;
+
+  //   }
+
+  // };
+
+  // document.addEventListener( 'keydown', onKeyDown );
+  // document.addEventListener( 'keyup', onKeyUp );
 
   renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
@@ -206,7 +211,7 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      scene.fog = new THREE.Fog( 'black', 150, 2200 );
+      scene.fog = new THREE.Fog( 'white', 150, 2200 );
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
@@ -246,7 +251,7 @@ const dracoLoader = new DRACOLoader();
   
     mixer.update( delta );
   
-    //controls.update();
+    controls.update();
   
     stats.update();
   
@@ -336,7 +341,7 @@ function animate() {
 }
 
 function render() {
-  //console.log(camera.position);
+ console.log(camera.position);
   //console.log(camera.lookAt);
 
   // //controls.update( clock.getDelta() );
