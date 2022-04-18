@@ -16,9 +16,9 @@ const clock = new THREE.Clock();
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const threshold = 0.1;
-var objects = [];
-var groundLimits = []
+var objects = []
 let INTERSECTED;
+var objectPositions = []
 
 var mouse = { x : 0, y : 0 };
 
@@ -30,7 +30,6 @@ let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let canJump = false;
 
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
@@ -70,12 +69,13 @@ function init() {
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
   camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
-  console.log(camera.position)
-  // camera.maxDistance= 1000
   camera.position.set( -960, 200, 545); // starting position of the camera
-
+  //camera.lookAt(-960, 200, 545);
+  
+  //console.log(new THREE.Vector3(objectPositions[7]));
+  
   controls = new MapControls( camera, renderer.domElement );
-
+  controls.target.set(-960, 200, 545)
   //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.1;
@@ -89,7 +89,12 @@ function init() {
   controls.minDistance = 100;
   controls.maxDistance = 500;
 
-  controls.maxPolarAngle = Math.PI / 2;
+  //horizontal rotation
+  controls.minAzimuthAngle = - Infinity; // default
+  controls.maxAzimuthAngle = Infinity; // default
+  //vertical rotation
+  controls.maxPolarAngle = Math.PI / 2.5;
+  controls.minPolarAngle = 0;
 
   // controls = new PointerLockControls( camera, document.body );
 
@@ -203,7 +208,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220413_InterfaceModel.glb', 
+    gltfloader.load( './assets/220418_InterfaceModel.glb', 
    
       function ( gltf ) {
 
@@ -215,7 +220,7 @@ const dracoLoader = new DRACOLoader();
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
-      mixer.timeScale=2; //Increased Animation Speed
+      mixer.timeScale = 2; //Increased Animation Speed
 
        //loop through to find renderView names
        scene.children.forEach(child => {
@@ -223,11 +228,12 @@ const dracoLoader = new DRACOLoader();
 
           if (grandchild.name.match('^0')) {
             objects.push(grandchild);
+            objectPositions.push(grandchild.position);
 
           }
         })
        });
-
+       
       console.log(objects);
 
       animate();
@@ -245,16 +251,12 @@ const dracoLoader = new DRACOLoader();
 
   function animate() {
 
+
     requestAnimationFrame( animate );
-  
     const delta = clock.getDelta();
-  
     mixer.update( delta );
-  
     controls.update();
-  
     stats.update();
-  
     renderer.render( scene, camera );
   
   }
@@ -281,7 +283,6 @@ function onWindowResize() {
 function animate() {
 
   requestAnimationFrame( animate );
-
   const time = performance.now();
 
   // raycast of camera body with objects not pointer
@@ -310,6 +311,7 @@ function animate() {
 
       if ( onObject === true ) {
         console.log("intesected with object!");
+        //console.log(objectPositions)
 
         //velocity.y = Math.max( 0, velocity.y );
         canJump = true;
@@ -341,8 +343,9 @@ function animate() {
 }
 
 function render() {
- console.log(camera.position);
-  //console.log(camera.lookAt);
+ //console.log(camera.position);
+//console.log(camera.lookAt);
+//console.log(camera.lookAt);
 
   // //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
