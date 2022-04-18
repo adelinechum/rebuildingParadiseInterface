@@ -198,7 +198,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220413_InterfaceModel.glb', 
+    gltfloader.load( './assets/220418_InterfaceModel.glb', 
    
       function ( gltf ) {
 
