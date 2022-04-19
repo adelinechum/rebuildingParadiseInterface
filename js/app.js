@@ -21,8 +21,9 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 var objects = []
 let INTERSECTED;
+
+//var objectPositions = []
 var objectPositions = []
-var position = new THREE.Vector3();
 
 var mouse = { x : 0, y : 0 };
 
@@ -116,9 +117,7 @@ const dracoLoader = new DRACOLoader();
 
           if (grandchild.name.match('^0')) {
             objects.push(grandchild);
-            objectPositions.push(grandchild.position);
-
-          }
+                }
           
         })
         //console.log(objectPositions);
@@ -127,20 +126,18 @@ const dracoLoader = new DRACOLoader();
       // get object world position
       scene.updateMatrixWorld(true);
       objects.matrixAutoUpdate = true;
-      console.log(objects[0]);
-      console.log(scene);
-     
 
-      // array.forEach(objects => {
-      //   position.getPositionFromMatrix(objects.matrixWorld)
-      // });
+      objects.forEach(worldPosition);
 
-      position.getPositionFromMatrix( objects[0].matrixWorld );
+      function worldPosition(element){
+        var position = new THREE.Vector3();
+        position.getPositionFromMatrix( element.matrixWorld );
+       // objectPositions.push( element, position );
+        objectPositions.push({name: element.name, position: position});
+      }
 
-      console.log(position.x + ', ' + position.y + ', ' + position.z);
-      console.log(position);
-    
-
+      console.log(objectPositions);
+      
       animate();
     }, undefined, function ( e ) {
 
@@ -216,7 +213,6 @@ function animate() {
 
       if ( onObject === true ) {
         console.log("intesected with object!");
-        //console.log(objectPositions)
 
         //velocity.y = Math.max( 0, velocity.y );
         canJump = true;
@@ -302,8 +298,6 @@ function renderView ( e ) {
   }
   else{
 
-    // console.log(document.getElementsByClassName("displayImages"));
-
     Array.from(document.getElementsByClassName("displayImages")).forEach(function (e) {
       e.style.display = 'none';
     })
@@ -320,44 +314,56 @@ document.getElementById("07").addEventListener("click", goToView, false)
 
 //console.log(objects.matrixWorld.Object.getPosition());
 // console.log(objects);
-// console.log(objectPositions)
-
-
-
+ console.log(objectPositions)
 
 function goToView (parameter) {
   var viewID = parameter.target.id
  // console.log(parameter.target.id);
   switch (viewID) {
-    case "01":  console.log("1");
-             console.log(position);
-               camera.position.set(position.x+'1000', cameraHeight, position.z+'1000');
-               controls.target.set(position.x, position.y, position.z);
+    case "01":
+             //console.log(objectPositions[0].position);
+              const position1 = objectPositions.filter(position => position.name.match('^01'))[0].position 
+              console.log(position1);
+              camera.position.set(position1.x -100, cameraHeight, position1.z+ 100);
+              controls.target.set(position1.x, position1.y, position1.z);
                
       break;
 
-    case "02": console.log("2");
-      // go to 2 location
+    case "02": 
+              const position2 = objectPositions.filter(position => position.name.match('^02'))[0].position 
+              camera.position.set(position2.x -100, cameraHeight, position2.z+ 100);
+              controls.target.set(position2.x, position2.y, position2.z);
     break;
 
-    case "03": console.log("3");
-      // go to 3 location
+    case "03":              
+              const position3 = objectPositions.filter(position => position.name.match('^03'))[0].position 
+              camera.position.set(position3.x -100, cameraHeight, position3.z+ 100);
+              controls.target.set(position3.x, position3.y, position3.z);
+
     break;
 
     case "04":
-      // go to 4 location
+              const position4 = objectPositions.filter(position => position.name.match('^04'))[0].position 
+              camera.position.set(position4.x -100, cameraHeight, position4.z+ 100);
+              controls.target.set(position4.x, position4.y, position4.z);
     break;
 
     case "05":
-      // go to 5 location
+              const position5 = objectPositions.filter(position => position.name.match('^05'))[0].position 
+              camera.position.set(position5.x -100, cameraHeight, position5.z+ 100);
+              controls.target.set(position5.x, position5.y, position5.z);
     break;
 
     case "06":
-      // go to 6 location
+              const position6 = objectPositions.filter(position => position.name.match('^06'))[0].position 
+              camera.position.set(position6.x -100, cameraHeight, position6.z+ 100);
+              controls.target.set(position6.x, position6.y, position6.z);
     break;
 
     case "07":
-      // go to 7 location
+              const position7 = objectPositions.filter(position => position.name.match('^07'))[0].position 
+              camera.position.set(position7.x -100, cameraHeight, position7.z+ 100);
+              controls.target.set(position7.x, position7.y, position7.z);
     break;
   
     default:  camera.position.set( -701, cameraHeight , 255); 
