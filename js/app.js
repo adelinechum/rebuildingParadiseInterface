@@ -22,10 +22,6 @@ var objectPositions = []
 
 var mouse = { x : 0, y : 0 };
 
-var liveCameras = []
-var historicalPts = []
-var sinCounter = 0; 
-
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
@@ -36,12 +32,7 @@ const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
 const vertex = new THREE.Vector3();
 const staticCamHeight = 200;
-
-//center of bounding box
-var center;
-//Bounding box to find center
-// const box = new THREE.Box3()
-//console.log(window.location.href)
+var cameraHeight = 180
 
 init();
 animate();
@@ -69,13 +60,10 @@ function init() {
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
   camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
-  camera.position.set( -960, 200, 545); // starting position of the camera
-  //camera.lookAt(-960, 200, 545);
-  
-  //console.log(new THREE.Vector3(objectPositions[7]));
+  camera.position.set( -701, cameraHeight , 255); // starting position of the camera
   
   controls = new MapControls( camera, renderer.domElement );
-  controls.target.set(-960, 200, 545)
+  controls.target.set(-828, 120, 398)
   //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
   controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
   controls.dampingFactor = 0.1;
@@ -86,8 +74,8 @@ function init() {
 
   controls.screenSpacePanning = false;
 
-  controls.minDistance = 100;
-  controls.maxDistance = 500;
+  controls.minDistance = 200;
+  controls.maxDistance = 400;
 
   //horizontal rotation
   controls.minAzimuthAngle = - Infinity; // default
@@ -231,7 +219,9 @@ const dracoLoader = new DRACOLoader();
             objectPositions.push(grandchild.position);
 
           }
+          
         })
+        console.log(objectPositions);
        });
        
       console.log(objects);
@@ -343,9 +333,10 @@ function animate() {
 }
 
 function render() {
- //console.log(camera.position);
+console.log(camera.position);
 //console.log(camera.lookAt);
 //console.log(camera.lookAt);
+console.log(controls.target);
 
   // //controls.update( clock.getDelta() );
   renderer.render( scene, camera ); 
