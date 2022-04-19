@@ -15,7 +15,6 @@ const clock = new THREE.Clock();
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-const threshold = 0.1;
 var objects = []
 let INTERSECTED;
 var objectPositions = []
@@ -30,7 +29,6 @@ let moveRight = false;
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-const vertex = new THREE.Vector3();
 const staticCamHeight = 200;
 var cameraHeight = 180
 
@@ -83,109 +81,6 @@ function init() {
   //vertical rotation
   controls.maxPolarAngle = Math.PI / 2.5;
   controls.minPolarAngle = 0;
-
-  // controls = new PointerLockControls( camera, document.body );
-
-  // document.body.addEventListener( 'keydown', function (e) {
-  //   if (e.key == "Shift") {
-  //     controls.unlock();
-  //   }
-  // } );
-
-  // document.body.addEventListener( 'keydown', function (e) {
-  //   //console.log(e);
-  //   if (e.key == "Escape") {
-  //     console.log("escape pressed");
-  //     blocker.style.display = 'block';  
-  //     instructions.style.display = '';
-  //   }
-  // } );
-
-  // document.body.addEventListener( 'keyup', function (e) {
-  //   if (e.key == "Shift") {
-  //     controls.lock();
-  //   }
-  // } );
-
-  // const blocker = document.getElementById( 'blocker' );
-  // const instructions = document.getElementById( 'instructions' );
-
-  // instructions.addEventListener( 'click', function () {
-  //   controls.lock();
-  // } );
-
-  // controls.addEventListener( 'lock', function () {
-
-  //   instructions.style.display = 'none';
-  //   blocker.style.display = 'none';
-
-  // } );
-
-  // scene.add( controls.getObject() );
-
-  // const onKeyDown = function ( event ) {
-
-  //   switch ( event.code ) {
-
-  //     case 'ArrowUp':
-  //     case 'KeyW':
-  //       moveForward = true;
-  //       break;
-
-  //     case 'ArrowLeft':
-  //     case 'KeyA':
-  //       moveLeft = true;
-  //       break;
-
-  //     case 'ArrowDown':
-  //     case 'KeyS':
-  //       moveBackward = true;
-  //       break;
-
-  //     case 'ArrowRight':
-  //     case 'KeyD':
-  //       moveRight = true;
-  //       break;
-
-  //     case 'Space':
-  //       if ( canJump === true ) velocity.y += 350;
-  //       canJump = false;
-  //       break;
-
-  //   }
-
-  // };
-
-  // const onKeyUp = function ( event ) {
-
-  //   switch ( event.code ) {
-
-  //     case 'ArrowUp':
-  //     case 'KeyW':
-  //       moveForward = false;
-  //       break;
-
-  //     case 'ArrowLeft':
-  //     case 'KeyA':
-  //       moveLeft = false;
-  //       break;
-
-  //     case 'ArrowDown':
-  //     case 'KeyS':
-  //       moveBackward = false;
-  //       break;
-
-  //     case 'ArrowRight':
-  //     case 'KeyD':
-  //       moveRight = false;
-  //       break;
-
-  //   }
-
-  // };
-
-  // document.addEventListener( 'keydown', onKeyDown );
-  // document.addEventListener( 'keyup', onKeyUp );
 
   renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
@@ -333,12 +228,10 @@ function animate() {
 }
 
 function render() {
-console.log(camera.position);
+//console.log(camera.position);
 //console.log(camera.lookAt);
 //console.log(camera.lookAt);
-console.log(controls.target);
-
-  // //controls.update( clock.getDelta() );
+//console.log(controls.target);
   renderer.render( scene, camera ); 
 }
 
@@ -397,36 +290,49 @@ function renderView ( e ) {
   }
 }
 
-  //AC HERE need to call renders 
-  // TODO call function from html not working
-function goTo(paramater) {
-  console.log("go to");
-  switch (paramater) {
-    case 1:
-      // go to 1 location
+document.getElementById("01").addEventListener("click", goToView, false)
+document.getElementById("02").addEventListener("click", goToView, false)
+document.getElementById("03").addEventListener("click", goToView, false)
+document.getElementById("04").addEventListener("click", goToView, false)
+document.getElementById("05").addEventListener("click", goToView, false)
+document.getElementById("06").addEventListener("click", goToView, false)
+document.getElementById("07").addEventListener("click", goToView, false)
+
+console.log(objects);
+console.log(objectPositions);
+
+function goToView (parameter) {
+  var viewID = parameter.target.id
+ // console.log(parameter.target.id);
+  switch (viewID) {
+    case "01":  console.log("1");
+              console.log(objectPositions[1]);
+               camera.position.set( 0, 0 , 0);
+               controls.target.set( -24650.69921875, 150, 12855.4892578125)
+               
       break;
 
-    case 2:
+    case "02": console.log("2");
       // go to 2 location
     break;
 
-    case 3:
+    case "03": console.log("3");
       // go to 3 location
     break;
 
-    case 4:
+    case "04":
       // go to 4 location
     break;
 
-    case 5:
+    case "05":
       // go to 5 location
     break;
 
-    case 6:
+    case "06":
       // go to 6 location
     break;
 
-    case 7:
+    case "07":
       // go to 7 location
     break;
   
@@ -434,6 +340,26 @@ function goTo(paramater) {
       break;
   }
 }
+
+		/* When the user clicks on the button, 
+		toggle between hiding and showing the dropdown content */
+		function myFunction() {
+		  document.getElementById("myDropdown").classList.toggle("show");
+		}
+		
+		// Close the dropdown if the user clicks outside of it
+		window.onclick = function(event) {
+		  if (!event.target.matches('.dropbtn')) {
+			var dropdowns = document.getElementsByClassName("dropdown-content");
+			var i;
+			for (i = 0; i < dropdowns.length; i++) {
+			  var openDropdown = dropdowns[i];
+			  if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			  }
+			}
+		  }
+		}
 
 
 

@@ -14,10 +14,12 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+	<script type="module" src="./js/app.js"></script>
+	<script  src="../three.js-master/examples/build/three.module.js"></script>
 </head>
 
 <body>
-	<script type="module" src="./js/app.js"></script>
+	
 
 	<div class="navbar">
 		<a href="./about.html">About</a>
@@ -26,38 +28,18 @@
 			<i class="fa fa-caret-down"></i>
 		  </button>
 		  <div class="dropdown-content">
-				<a onclick="goTo('1')">POI: City Plan</a>
-				<a onclick="goTo('2')">POI: Single Family Housing</a>
-				<a onclick="goTo('3')">POI: Thinning & Construction</a>
-				<a onclick="goTo('4')">POI: Housing Built Out</a>
-				<a onclick="goTo('5')">Live: Ponds</a>
-				<a onclick="goTo('6')">Live: Wildlands</a>
-				<a onclick="goTo('7')">POI: Regional Plan</a>
+				<a id = "01" >POI: City Plan</a>
+				<a id = "02">POI: Single Family Housing</a>
+				<a id = "03">POI: Thinning & Construction</a>
+				<a id = "04">POI: Housing Built Out</a>
+				<a id = "05">Live: Ponds</a>
+				<a id = "06">Live: Wildlands</a>
+				<a id = "07">POI: Regional Plan</a>
 		  </div>
 		</div>
 	  </div> 
 
-	
 	<script>
-		/* When the user clicks on the button, 
-		toggle between hiding and showing the dropdown content */
-		function myFunction() {
-		  document.getElementById("myDropdown").classList.toggle("show");
-		}
-		
-		// Close the dropdown if the user clicks outside of it
-		window.onclick = function(event) {
-		  if (!event.target.matches('.dropbtn')) {
-			var dropdowns = document.getElementsByClassName("dropdown-content");
-			var i;
-			for (i = 0; i < dropdowns.length; i++) {
-			  var openDropdown = dropdowns[i];
-			  if (openDropdown.classList.contains('show')) {
-				openDropdown.classList.remove('show');
-			  }
-			}
-		  }
-		}
 
 		</script>
 
@@ -76,28 +58,6 @@
 
 	<!-- this is the container where the three.js scene will go -->
 	<div id="container">
-
-		<!-- Instructions & Enter Page -->
-<!-- 		<div id="blocker">
-			<div id="instructions">
-				<p style=" font-size: 36px;">
-					<b>Welcome to the Paradise Human Climate Impact Model</b>
-
-					<br/>
-					<br/>
-					Click To Enter
-				</p>
-				<p style=" font-size: 20px;">
-					Move: WASD<br/>
-					Jump: SPACE<br/>
-					Look: MOUSE<br/>
-					Exit: Double Esc<br/>
-					Click Object: SHIFT Click<br/>
-					Exit Image: SHIFT Click Out
-
-				</p>
-			</div>
-		</div>	 -->
 
 					<!-- Render Popup -->
 <!-- 				<img id="01_CityPlan" class="displayImages" src="../assets/01CityPlan.jpg" alt="Paradise City Plan" style="display: none;">
@@ -124,7 +84,7 @@
 	<!-- <script src="./js/three.min.js"></script> -->
 	<!-- <script src="./js/OrbitControls.js"></script> -->
 
-	<script  src="../three.js-master/examples/build/three.module.js"></script>
+
 <!-- 	<script type="module" src="../three.js-master/examples/jsm/controls/OrbitControls.js"></script>
 	<script type="module" src="../three.js-master/examples/jsm/controls/FlyControls.js"></script>
 	<script type="module" src="../three.js-master/examples/jsm/controls/FirstPersonControls.js"></script> -->
@@ -133,7 +93,7 @@ s
 	<!-- <script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script> -->
 
 	<!-- this is your app's js file -->
-	<script type="module" src="./js/app.js"></script>
+
 </body>
 
 </html>
