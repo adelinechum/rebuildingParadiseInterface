@@ -8,41 +8,29 @@ import { PointerLockControls } from '../three.js-master/examples/jsm/controls/Po
 import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
-
+import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
-const threshold = 0.1;
-var objects = [];
-var groundLimits = []
+var objects = []
 let INTERSECTED;
+var objectPositions = []
 
 var mouse = { x : 0, y : 0 };
-
-var liveCameras = []
-var historicalPts = []
-var sinCounter = 0; 
 
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
-let canJump = false;
 
 let prevTime = performance.now();
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-const vertex = new THREE.Vector3();
-const staticCamHeight = 150;
-
-//center of bounding box
-var center;
-//Bounding box to find center
-// const box = new THREE.Box3()
-//console.log(window.location.href)
+const staticCamHeight = 200;
+var cameraHeight = 180
 
 init();
 animate();
@@ -65,129 +53,34 @@ function init() {
   renderer = new THREE.WebGLRenderer();
   //renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
-  renderer.setClearColor ('black', 1); // this is the background color seen while scene is loading
+  renderer.setClearColor ('white', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 30, container.clientWidth / container.clientHeight, 10, 50000 );
-  console.log(camera.position)
-  // camera.maxDistance= 1000
-  camera.position.set( -1700, staticCamHeight, 1700); // starting position of the camera
+  camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
+  camera.position.set( -701, cameraHeight , 255); // starting position of the camera
   
-  // //camera controls to allow for orbiting
-  // controls = new OrbitControls(camera, renderer.domElement);
-  // controls.enableDamping = true; // creates a softer orbiting feel
-  // controls.dampingFactor = 0.1; // determines how soft
-  // controls.enableZoom = true;
-  // controls.maxDistance = 33000; // 35847 magnitude of camera position vector
-  // //controls.maxZoom = 1;
-  // controls.maxPolarAngle = Math.PI / 2;
-  // //controls.autoRotate = true;
-  // controls.screenSpacePanning = true;
+  controls = new MapControls( camera, renderer.domElement );
+  controls.target.set(-828, 120, 398)
+  //controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
+  controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+  controls.dampingFactor = 0.1;
+ // controls.autoRotate = true
+  //controls.maxDistance = 33000; // 35847 magnitude of camera position vector
+  controls.maxZoom = 1;
+  controls.maxPolarAngle = Math.PI / 2;
 
+  controls.screenSpacePanning = false;
 
-  controls = new PointerLockControls( camera, document.body );
+  controls.minDistance = 200;
+  controls.maxDistance = 400;
 
-  document.body.addEventListener( 'keydown', function (e) {
-    if (e.key == "Shift") {
-      controls.unlock();
-    }
-  } );
-
-  document.body.addEventListener( 'keydown', function (e) {
-    //console.log(e);
-    if (e.key == "Escape") {
-      console.log("escape pressed");
-      blocker.style.display = 'block';  
-      instructions.style.display = '';
-    }
-  } );
-
-  document.body.addEventListener( 'keyup', function (e) {
-    if (e.key == "Shift") {
-      controls.lock();
-    }
-  } );
-
-  const blocker = document.getElementById( 'blocker' );
-  const instructions = document.getElementById( 'instructions' );
-
-  instructions.addEventListener( 'click', function () {
-    controls.lock();
-  } );
-
-  controls.addEventListener( 'lock', function () {
-
-    instructions.style.display = 'none';
-    blocker.style.display = 'none';
-
-  } );
-
-  scene.add( controls.getObject() );
-
-  const onKeyDown = function ( event ) {
-
-    switch ( event.code ) {
-
-      case 'ArrowUp':
-      case 'KeyW':
-        moveForward = true;
-        break;
-
-      case 'ArrowLeft':
-      case 'KeyA':
-        moveLeft = true;
-        break;
-
-      case 'ArrowDown':
-      case 'KeyS':
-        moveBackward = true;
-        break;
-
-      case 'ArrowRight':
-      case 'KeyD':
-        moveRight = true;
-        break;
-
-      case 'Space':
-        if ( canJump === true ) velocity.y += 350;
-        canJump = false;
-        break;
-
-    }
-
-  };
-
-  const onKeyUp = function ( event ) {
-
-    switch ( event.code ) {
-
-      case 'ArrowUp':
-      case 'KeyW':
-        moveForward = false;
-        break;
-
-      case 'ArrowLeft':
-      case 'KeyA':
-        moveLeft = false;
-        break;
-
-      case 'ArrowDown':
-      case 'KeyS':
-        moveBackward = false;
-        break;
-
-      case 'ArrowRight':
-      case 'KeyD':
-        moveRight = false;
-        break;
-
-    }
-
-  };
-
-  document.addEventListener( 'keydown', onKeyDown );
-  document.addEventListener( 'keyup', onKeyUp );
+  //horizontal rotation
+  controls.minAzimuthAngle = - Infinity; // default
+  controls.maxAzimuthAngle = Infinity; // default
+  //vertical rotation
+  controls.maxPolarAngle = Math.PI / 2.5;
+  controls.minPolarAngle = 0;
 
   renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
@@ -206,11 +99,11 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      scene.fog = new THREE.Fog( 'black', 150, 2200 );
+      scene.fog = new THREE.Fog( 'white', 150, 2200 );
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
-      mixer.timeScale=2; //Increased Animation Speed
+      mixer.timeScale = 2; //Increased Animation Speed
 
        //loop through to find renderView names
        scene.children.forEach(child => {
@@ -218,11 +111,14 @@ const dracoLoader = new DRACOLoader();
 
           if (grandchild.name.match('^0')) {
             objects.push(grandchild);
+            objectPositions.push(grandchild.position);
 
           }
+          
         })
+        console.log(objectPositions);
        });
-
+       
       console.log(objects);
 
       animate();
@@ -240,16 +136,12 @@ const dracoLoader = new DRACOLoader();
 
   function animate() {
 
+
     requestAnimationFrame( animate );
-  
     const delta = clock.getDelta();
-  
     mixer.update( delta );
-  
-    //controls.update();
-  
+    controls.update();
     stats.update();
-  
     renderer.render( scene, camera );
   
   }
@@ -276,7 +168,6 @@ function onWindowResize() {
 function animate() {
 
   requestAnimationFrame( animate );
-
   const time = performance.now();
 
   // raycast of camera body with objects not pointer
@@ -305,6 +196,7 @@ function animate() {
 
       if ( onObject === true ) {
         console.log("intesected with object!");
+        //console.log(objectPositions)
 
         //velocity.y = Math.max( 0, velocity.y );
         canJump = true;
@@ -336,10 +228,10 @@ function animate() {
 }
 
 function render() {
-  //console.log(camera.position);
-  //console.log(camera.lookAt);
-
-  // //controls.update( clock.getDelta() );
+//console.log(camera.position);
+//console.log(camera.lookAt);
+//console.log(camera.lookAt);
+//console.log(controls.target);
   renderer.render( scene, camera ); 
 }
 
@@ -398,36 +290,49 @@ function renderView ( e ) {
   }
 }
 
-  //AC HERE need to call renders 
-  // TODO call function from html not working
-function goTo(paramater) {
-  console.log("go to");
-  switch (paramater) {
-    case 1:
-      // go to 1 location
+document.getElementById("01").addEventListener("click", goToView, false)
+document.getElementById("02").addEventListener("click", goToView, false)
+document.getElementById("03").addEventListener("click", goToView, false)
+document.getElementById("04").addEventListener("click", goToView, false)
+document.getElementById("05").addEventListener("click", goToView, false)
+document.getElementById("06").addEventListener("click", goToView, false)
+document.getElementById("07").addEventListener("click", goToView, false)
+
+console.log(objects);
+console.log(objectPositions);
+
+function goToView (parameter) {
+  var viewID = parameter.target.id
+ // console.log(parameter.target.id);
+  switch (viewID) {
+    case "01":  console.log("1");
+              console.log(objectPositions[1]);
+               camera.position.set( 0, 0 , 0);
+               controls.target.set( -24650.69921875, 150, 12855.4892578125)
+               
       break;
 
-    case 2:
+    case "02": console.log("2");
       // go to 2 location
     break;
 
-    case 3:
+    case "03": console.log("3");
       // go to 3 location
     break;
 
-    case 4:
+    case "04":
       // go to 4 location
     break;
 
-    case 5:
+    case "05":
       // go to 5 location
     break;
 
-    case 6:
+    case "06":
       // go to 6 location
     break;
 
-    case 7:
+    case "07":
       // go to 7 location
     break;
   
@@ -435,6 +340,26 @@ function goTo(paramater) {
       break;
   }
 }
+
+		/* When the user clicks on the button, 
+		toggle between hiding and showing the dropdown content */
+		function myFunction() {
+		  document.getElementById("myDropdown").classList.toggle("show");
+		}
+		
+		// Close the dropdown if the user clicks outside of it
+		window.onclick = function(event) {
+		  if (!event.target.matches('.dropbtn')) {
+			var dropdowns = document.getElementsByClassName("dropdown-content");
+			var i;
+			for (i = 0; i < dropdowns.length; i++) {
+			  var openDropdown = dropdowns[i];
+			  if (openDropdown.classList.contains('show')) {
+				openDropdown.classList.remove('show');
+			  }
+			}
+		  }
+		}
 
 
 
