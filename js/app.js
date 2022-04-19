@@ -9,6 +9,10 @@ import { OrbitControls } from '../three.js-master/examples/jsm/controls/OrbitCon
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
+// import { Matrix3 } from '../three.js-master/src/math/Matrix3.js';
+// import { MathUtils } from '../three.js-master/src/math/MathUtils.js';
+// import { Vector3 } from '../math/Vector3.js';
+// import { Matrix4 } from '../math/Matrix4.js';
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
@@ -18,6 +22,7 @@ const pointer = new THREE.Vector2();
 var objects = []
 let INTERSECTED;
 var objectPositions = []
+var position = new THREE.Vector3();
 
 var mouse = { x : 0, y : 0 };
 
@@ -116,10 +121,25 @@ const dracoLoader = new DRACOLoader();
           }
           
         })
-        console.log(objectPositions);
+        //console.log(objectPositions);
        });
-       
-      console.log(objects);
+
+      // get object world position
+      scene.updateMatrixWorld(true);
+      objects.matrixAutoUpdate = true;
+      console.log(objects[0]);
+      console.log(scene);
+     
+
+      // array.forEach(objects => {
+      //   position.getPositionFromMatrix(objects.matrixWorld)
+      // });
+
+      position.getPositionFromMatrix( objects[0].matrixWorld );
+
+      console.log(position.x + ', ' + position.y + ', ' + position.z);
+      console.log(position);
+    
 
       animate();
     }, undefined, function ( e ) {
@@ -298,17 +318,21 @@ document.getElementById("05").addEventListener("click", goToView, false)
 document.getElementById("06").addEventListener("click", goToView, false)
 document.getElementById("07").addEventListener("click", goToView, false)
 
-console.log(objects);
-console.log(objectPositions);
+//console.log(objects.matrixWorld.Object.getPosition());
+// console.log(objects);
+// console.log(objectPositions)
+
+
+
 
 function goToView (parameter) {
   var viewID = parameter.target.id
  // console.log(parameter.target.id);
   switch (viewID) {
     case "01":  console.log("1");
-              console.log(objectPositions[1]);
-               camera.position.set( 0, 0 , 0);
-               controls.target.set( -24650.69921875, 150, 12855.4892578125)
+             console.log(position);
+               camera.position.set(position.x+'1000', cameraHeight, position.z+'1000');
+               controls.target.set(position.x, position.y, position.z);
                
       break;
 
@@ -336,7 +360,8 @@ function goToView (parameter) {
       // go to 7 location
     break;
   
-    default:
+    default:  camera.position.set( -701, cameraHeight , 255); 
+              controls.target.set(-828, 120, 398);
       break;
   }
 }
