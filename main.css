@@ -11,12 +11,16 @@ html, body {
 
   /* style the three.js container however your want */
   #container {
-    position: fixed;
+    z-index: 0;
+    position:absolute;
+    top:0; 
+    left:0;
     height: 100%;
     width: 100%;
     align-items: center;
     display: flex;
     margin: auto;
+    justify-content: center;
   }
 
   #aboutPage {
@@ -56,10 +60,13 @@ html, body {
   .topnav {
     background-color: #333;
     overflow: hidden;
+    position: absolute;
+    z-index: 2;
   }
 
   /* Style the links inside the navigation bar */
   .topnav a {
+    position:absolute;
     float: right;
     color: #f2f2f2;
     text-align: center;
@@ -74,12 +81,14 @@ html, body {
   .topnav a:hover {
     background-color: #ddd;
     color: black;
+    z-index: 2;
   }
 
   /* Add a color to the active/current link */
   .topnav a.active {
     background-color: grey;
     color: white;
+    z-index: 2;
   }
 
 
@@ -88,6 +97,9 @@ html, body {
   overflow: hidden;
   background-color: #333;
   font-family: Arial;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
 }
 
 /* Links inside the navbar */
@@ -98,10 +110,14 @@ html, body {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
+  z-index: 2;
+
+
 }
 
 /* The dropdown container */
 .dropdown {
+
   float: left;
   overflow: hidden;
 }
@@ -120,7 +136,7 @@ html, body {
 
 /* Add a red background color to navbar links on hover */
 .navbar a:hover, .dropdown:hover .dropbtn {
-  background-color: red;
+  background-color: yellow;
 }
 
 /* Dropdown content (hidden by default) */
@@ -130,7 +146,7 @@ html, body {
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
+  z-index: 2;
 }
 
 /* Links inside the dropdown */
@@ -146,70 +162,14 @@ html, body {
 /* Add a grey background color to dropdown links on hover */
 .dropdown-content a:hover {
   background-color: #ddd;
+  z-index: 2;
 }
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
   display: block;
+  z-index: 2;
 } 
-
-
-.sidepanel{
-  z-index: 10;
-  position: fixed;
-  text-align: left;
-  width: 300px;
-  height: 90%;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  margin-left: 25px;
-  font-size: inherit;
-}
-
-#sidepanelBackground{
-  background-color: #101010;
-  opacity: 40%;
-  z-index: 5;
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
-
-.mapView{
-  z-index: 15;
-  opacity: 100%;
-  position: absolute;
-  text-align: center;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  color: white;
-  font-family: 'Roboto', sans-serif;
-  
-}
-
-#blocker {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-#instructions {
-  width: 100%;
-  height: 100%;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-size: 14px;
-  cursor: pointer;
-  color: #ddd;
-}
 
 
 .displayImages {
@@ -220,10 +180,12 @@ img {
   position: fixed;
   top: 50%;
   left: 50%;
-  max-height: 70%;
+  max-width: 65%;
+  max-height: 80%;
   transform: translate(-50%, -50%);
   border: 10px solid #ddd;
   border-radius: 0px;
+  box-shadow: 10px 10px 10px;
   
 }
 
@@ -233,4 +195,176 @@ img {
   top: 10%;
   left: 90%;
 }
+
+.grid-container {
+  z-index: 1;
+  position: absolute;
+  display: flex;
+  width: 300px;
+  height: 90%;
+  grid-template-columns:auto;
+  grid-template-rows: 5% 5% 5%;
+  gap: 5px;
+  padding: 5px;
+  opacity: 100%;
+  outline: 1px solid black
+}
+
+.grid-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+  opacity: 100%;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 1px;
+}
+
+.grid-container > div {
+  text-align: center;
+  font-size: 10px;
+  background-color: rgba(44, 34, 34, 0.8);
+ 
+}
+
+.item1 {
+  grid-column: 1 / 4;
+  grid-row: 1 / 5;
+}
+
+.item2 {
+  grid-column: 1 / 4;
+  grid-row: 6;
+  
+}
+
+.item3 {
+  grid-column: 1/3;
+  grid-row: 7;
+}
+
+.item4 {
+  grid-column: 3;
+  grid-row: 7;
+}
+
+.item5 {
+  grid-column: 1/3;
+  grid-row: 8;
+}
+.item6 {
+  grid-column: 3;
+  grid-row: 8;
+}
+
+.item7 {
+  grid-column: 1/3;
+  grid-row: 9;
+}
+
+.item8 {
+  grid-column: 3;
+  grid-row: 9;
+}
+
+.item9 {
+  grid-column: 1/3;
+  grid-row: 10;
+}
+.item10 {
+  grid-column: 3/4;
+  grid-row: 10;
+}
+
+.item11 {
+  grid-column: 1 / 4;
+  grid-row: 11;
+}
+
+.item12 {
+  grid-column: 1/3;
+  grid-row: 12;
+}
+
+.item13 {
+  grid-column: 3;
+  grid-row: 12;
+}
+
+.item14 {
+  grid-column: 1/3;
+  grid-row: 13;
+}
+.item15 {
+  grid-column: 3;
+  grid-row: 13;
+}
+
+.item16 {
+  grid-column: 1/3;
+  grid-row: 14;
+}
+
+.item17 {
+  grid-column: 3;
+  grid-row: 14;
+}
+
+.item18 {
+  grid-column: 1/3;
+  grid-row: 15;
+}
+.item19 {
+  grid-column: 3;
+  grid-row: 15;
+}
+
+.item20 {
+  grid-column: 1/4;
+  grid-row: 16;
+}
+
+.item21 {
+  grid-column: 1/3;
+  grid-row: 17;
+}
+
+.item22 {
+  grid-column: 3;
+  grid-row: 17;
+}
+.item23 {
+  grid-column: 1/3;
+  grid-row: 18;
+}
+
+.item24 {
+  grid-column: 3;
+  grid-row: 18;
+}
+
+.item25 {
+  grid-column: 1/3;
+  grid-row: 19;
+}
+
+.item26 {
+  grid-column: 3;
+  grid-row: 19;
+}
+
+.item27 {
+  grid-column: 1/3;
+  grid-row: 20;
+}
+
+.item28 {
+  grid-column: 3;
+  grid-row: 20;
+}
+
 

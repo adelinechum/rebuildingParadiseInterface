@@ -70,13 +70,17 @@ function init() {
   renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
 
+  // White directional light at full intensity shining from the top.
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, .9 );
+  scene.add( directionalLight );
+
 // load scene
 const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath( '../three.js-master/examples/js/libs/draco/gltf/' );
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220418_InterfaceModel.glb', 
+    gltfloader.load( './assets/220419_InterfaceModel.glb', 
    
       function ( gltf ) {
 
