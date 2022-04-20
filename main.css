@@ -222,6 +222,15 @@ img {
   left: 50%;
   max-height: 70%;
   transform: translate(-50%, -50%);
+  border: 10px solid #ddd;
+  border-radius: 0px;
   
+}
+
+#exitButton{
+  z-index: 10000;
+  position: fixed;
+  top: 10%;
+  left: 90%;
 }
 
