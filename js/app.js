@@ -66,8 +66,8 @@ function init() {
   renderer.domElement.addEventListener( 'click', renderView, false );
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
 
-  // White directional light at full intensity shining from the top.
-  const directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+  // White directional light at shining from the top.
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, 3 );
   scene.add( directionalLight );
 
 // load scene
