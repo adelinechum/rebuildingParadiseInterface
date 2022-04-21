@@ -5,18 +5,9 @@ import Stats from '../three.js-master/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
-import { GUI } from '../three.js-master/examples/jsm/libs/lil-gui.module.min.js';
-import { EffectComposer } from '../three.js-master/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from '../three.js-master/examples/jsm/postprocessing/RenderPass.js';
-import { AfterimagePass } from '../three.js-master/examples/jsm/postprocessing/AfterimagePass.js';
 
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
-
-
-let composer;
-let mesh;
-let afterimagePass;
 
 
 const raycaster = new THREE.Raycaster();
@@ -28,13 +19,7 @@ let INTERSECTED;
 var objectPositions = []
 var cameraHeight = 150
 
-
-const params = {
-  enable: true
-};
-
 init();
-createGUI();
 animate();
 window.addEventListener( 'pointermove', onPointerMove);        
 window.requestAnimationFrame(render);
@@ -160,15 +145,6 @@ function onPointerMove( event ) {
 
 }
 
-function createGUI() {
-
-  const gui = new GUI( { name: 'Damp setting' } );
-  gui.add( afterimagePass.uniforms[ 'damp' ], 'value', 0, 1 ).step( 0.001 );
-  gui.add( params, 'enable' );
-
-}
-
-
 // function for handling resize events
 function onWindowResize() {
 
@@ -182,7 +158,7 @@ function animate() {
 
   requestAnimationFrame( animate );
   const time = performance.now();
-  prevTime = time;
+  //prevTime = time;
   render();
 
 }
