@@ -7,37 +7,40 @@ html, body {
     height: 100%;
     width: 100%;
     font-family: 'Roboto Mono', monospace;
+    justify-content: center;
+    display: flex;
   }
 
   /* style the three.js container however your want */
   #container {
     z-index: 0;
     position:absolute;
+    justify-content: center;
     top:0; 
     left:0;
     height: 100%;
     width: 100%;
-    align-items: center;
     display: flex;
     margin: auto;
-    justify-content: center;
+  
   }
 
   #aboutPage {
     position: fixed;
     height: 100%;
     width: 100%;
-    background-color: black;
+    background-color:white;
     margin-top: 0px;
   }
 
   #aboutText{
-    color: white;
-    background-color: black;
+    margin-top: 30%;
+    margin-left: 30%;
+    margin-right: 30%;
+    color: #333;
+    background-color: white;
     margin-top: 25px;
     margin-bottom: 25px;
-    margin-left: 25px;
-    margin-right: 25px;
     font-family: 'Roboto Mono', monospace;
   }
 
@@ -97,7 +100,10 @@ html, body {
     z-index: 100;
     width: 100%;
     text-align: center;
-    transform: translate(0,50%);
+    transform: translate(0%,50%);
+    justify-self: center;
+    align-self: center;
+    top: 0.15%;
   }
 
 
@@ -112,7 +118,7 @@ html, body {
 
 /* Links inside the navbar */
 .navbar a {
-  float: left;
+  float: right;
   font-size: 16px;
   color: white;
   text-align: center;
@@ -125,8 +131,8 @@ html, body {
 
 /* The dropdown container */
 .dropdown {
-
-  float: left;
+  z-index: 1000;
+  float: right;
   overflow: hidden;
 }
 
@@ -150,11 +156,12 @@ html, body {
 /* Dropdown content (hidden by default) */
 .dropdown-content {
   display: none;
-  position: absolute;
+  position: fixed;
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 2;
+  z-index: 1000;
+  float: left;
 }
 
 /* Links inside the dropdown */
@@ -182,9 +189,7 @@ html, body {
 
 .displayImages {
   justify-content: center;
-}
-
-img {
+  z-index: 5000;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -193,8 +198,7 @@ img {
   transform: translate(-50%, -50%);
   border: 10px solid #ddd;
   border-radius: 0px;
-  box-shadow: 10px 10px 10px;
-  
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
 }
 
 #exitButton{
@@ -206,68 +210,72 @@ img {
 
 .grid-container {
   display: grid;
+  justify-content: center;
   z-index: 1;
   position: absolute;
-  width: 15%;
-  height: 90%;
-  grid-template-rows: 5% 5% 5%;
-  grid-template-columns: auto auto auto;
-  gap: 5px;
-  padding: 5px;
+  width: 10%;
+  min-width: 150px;
+  height: fit-content;
+  gap: 6px;
   opacity: 100%;
   outline: 1px solid black;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 0px;
-  transform: translate(15px,65px);
+  padding: 5px 5px 5px 5px;
+  top: 10%;
+  left: 2%;
+  transform: translate(0%,10%);
+
 }
 
 .grid-container > div {
-  padding: 2px 2px;
   opacity: 100%;
 }
 
 .fullLengthImage {
-  grid-column: 1 / 7;
-  grid-row: 1 / 7;
-  width: fit-content;
+  grid-area: 1 / 1 / span 7 / span 8;
+  width: 95%;
   height: fit-content;
-  transform: translate(50%,50%);
+  translate: 2.5%;
+  overflow: hidden;
+  /* transform: translate(50%,50%); */
+  /* background-color: #000; */
 }
 
 .labelTitle {
   text-align: center;
-  grid-column: 1 / 7;
-  justify-content: center;
+  grid-column: 1/9;
   font-size: 17px;
   font-weight: 400;
   
 }
 
 .labelFullLength {
-  text-align: left;
+  text-align: center;
   grid-column: 1 / 7;
   font-size: 15px;
   text-indent: 5%;
   font-weight: 300;
+  margin-left: 2%;
 }
 
 .label {
+  margin-left: 2%;
   text-align: left;
-  grid-column: 1/6;
+  grid-column: 1/7;
   justify-content: center;
-  font-size: 15px;
+  font-size: 12px;
   text-indent: 5%;
   font-weight: 300;
 }
 
 .button {
   font-size: 15px;
-  translate: -5%;
-  transform: scale(85%);
+  translate: -48%;
+  transform: scale(90%);
   text-align: center;
   justify-content: center;
   text-justify: bottom;
-  grid-column: 6/7;
+  grid-column: 8;
   font-weight: 300;
   cursor: pointer;
   border-width: 1px;
@@ -278,3 +286,26 @@ img {
 
 .button:hover {background-color: yellow;}
 .button:active, .button1.active {background-color: yellow;}
+
+#blocker {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 5000;
+  transition: ease-in-out;
+}
+
+#instructions {
+  color: #333;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 36px;
+  cursor: pointer;
+  padding: 0%;
+  margin: 0%;

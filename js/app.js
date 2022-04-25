@@ -75,6 +75,26 @@ function init() {
   const directionalLight = new THREE.DirectionalLight( 0xffffff, .9 );
   scene.add( directionalLight );
 
+
+// var progress = document.createElement('splash');
+// var progressBar = document.createElement('splash');
+
+// progress.appendChild(progressBar);
+
+// document.body.appendChild(progress);
+
+// var manager = new THREE.LoadingManager();
+// manager.onProgress = function ( item, loaded, total ) {
+//   progressBar.style.width = (loaded / total * 100) + '%';
+// };
+
+// function addRandomPlaceHoldItImage(){
+//   var r = Math.round(Math.random() * 4000);
+//   new THREE.ImageLoader(manager).load('./assets/ParadiseSeal.png');
+// }
+
+// for(var i = 0; i < 10; i++) addRandomPlaceHoldItImage();
+
 // load scene
 const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath( '../three.js-master/examples/js/libs/draco/gltf/' );
@@ -139,6 +159,17 @@ const dracoLoader = new DRACOLoader();
 
     },
  );
+
+//block onclick  Enter interface
+ const blocker = document.getElementById( 'blocker' );
+ const instructions = document.getElementById( 'instructions' );
+
+ instructions.addEventListener( 'click', function () {
+
+  instructions.style.display = 'none';
+  blocker.style.display = 'none';
+
+ } );
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
