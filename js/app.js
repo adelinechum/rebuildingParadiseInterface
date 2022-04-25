@@ -6,6 +6,12 @@ import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.j
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 
+
+var script = document.createElement('script');
+script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
+script.type = 'text/javascript';
+document.getElementsByTagName('head')[0].appendChild(script);
+
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
 
@@ -133,21 +139,6 @@ const dracoLoader = new DRACOLoader();
         })
        });
 
-      // get object world position
-      scene.updateMatrixWorld(true);
-      objects.matrixAutoUpdate = true;
-      animated.matrixAutoUpdate = true;
-
-      objects.forEach(worldPosition);
-      animated.forEach(worldPosition);
-
-      function worldPosition(element){
-        var position = new THREE.Vector3();
-        position.getPositionFromMatrix( element.matrixWorld );
-       // objectPositions.push( element, position );
-        objectPositions.push({name: element.name, position: position});
-      }
-      
       animate();
     }, undefined, function ( e ) {
 
@@ -201,6 +192,21 @@ function onWindowResize() {
 
 // animates the scene
 function animate() {
+
+   // get object world position
+   scene.updateMatrixWorld(true);
+   objects.matrixAutoUpdate = true;
+   animated.matrixAutoUpdate = true;
+
+   objects.forEach(worldPosition);
+   animated.forEach(worldPosition);
+
+   function worldPosition(element){
+     var position = new THREE.Vector3();
+     position.getPositionFromMatrix( element.matrixWorld );
+    // objectPositions.push( element, position );
+     objectPositions.push({name: element.name, position: position});
+   }
 
   requestAnimationFrame( animate );
   const time = performance.now();
@@ -287,10 +293,10 @@ document.getElementById("ponds").addEventListener("click", goToView, false)
 //document.getElementById("transport").addEventListener("click", goToView, false)
 document.getElementById("Stationary").addEventListener("click", goToView, false)
 document.getElementById("drone").addEventListener("click", goToView, false)
-//document.getElementById("predator").addEventListener("click", goToView, false)
-//document.getElementById("mammal").addEventListener("click", goToView, false)
-//document.getElementById("reptile").addEventListener("click", goToView, false)
-//document.getElementById("bird").addEventListener("click", goToView, false)
+document.getElementById("predator").addEventListener("click", goToView, false)
+document.getElementById("mammal").addEventListener("click", goToView, false)
+document.getElementById("reptile").addEventListener("click", goToView, false)
+document.getElementById("bird").addEventListener("click", goToView, false)
 
 console.log(objectPositions);
 
@@ -353,7 +359,7 @@ function goToView (parameter) {
     break;
 
     case "wildfire":
-      const position8 = objectPositions.filter(position => position.name.match('Animated_Fire1'))[0].position 
+      const position8 = objectPositions.filter(position => position.name.match('Animated_Fire'))[0].position 
       camera.position.set(position8.x -300, cameraHeight, position8.z+ 300);
       controls.target.set(position8.x, position8.y, position8.z);  
     break;
@@ -376,6 +382,31 @@ function goToView (parameter) {
             camera.position.set(position11.x -300, cameraHeight, position11.z+ 300);
             controls.target.set(position11.x, position11.y, position11.z);
       break;
+
+      case "reptile": 
+            const position12 = objectPositions.filter(position => position.name.match('Animated_Reptile'))[0].position 
+            camera.position.set(position12.x +100, cameraHeight, position12.z+ 100);
+            controls.target.set(position12.x, position12.y, position12.z);
+      break;
+
+      case "bird":              
+            const position13 = objectPositions.filter(position => position.name.match('Animated_Bird'))[0].position 
+            camera.position.set(position13.x -100, cameraHeight, position13.z+ 100);
+            controls.target.set(position13.x, position13.y, position13.z);
+
+      break;
+
+      case "mammal":
+            const position14 = objectPositions.filter(position => position.name.match('Animated_Mammal'))[0].position 
+            camera.position.set(position14.x -300, cameraHeight, position14.z+ 300);
+            controls.target.set(position14.x, position14.y, position14.z);
+      break;
+
+      case "predator":
+        const position15 = objectPositions.filter(position => position.name.match('Animated_Predator'))[0].position 
+        camera.position.set(position15.x -100, cameraHeight+100, position15.z+ 100);
+        controls.target.set(position15.x, position15.y, position15.z);
+  break;
   
     default:  camera.position.set( -701, cameraHeight , 255); 
               controls.target.set(-828, 120, 398);
@@ -396,3 +427,43 @@ function goToView (parameter) {
 			}
 		  }
 		}
+
+
+var TEXTS = [
+  "Wind NE 6.9mph Light", 
+  "Wind N 6.9mph Light", 
+  "Wind NNW 5.7mph Light", 
+  "Wind ENE 3.4mph Light",
+  "Wind NNE 6.9mph Light", 
+  "Wind NNE 7.1mph Light", 
+  "Wind NNE 8.1mph Gentle", 
+  "Wind WNW 3.4mph Gentle",
+  "Wind WNW 10.3mph Gentle", 
+  "Wind NW 11.3mph Gentle",
+  "Wind NW 12.7mph Moderate",
+  "Wind WNW 13.4mph Moderate",
+  "Wind WNW 13.3mph Moderate", 
+  "Wind NW 16.2mph Moderate",
+  "Wind NW 16.7mph Moderate",
+  "Wind WNW 12.3mph Gentle", 
+  "Wind WNW 11.3mph Gentle",
+  "Wind NW 10.7mph Moderate",
+  "Wind WNW 9.4mph Moderate",
+  "Wind NW 8.3mph Moderate", 
+  "Wind NNE 7.9mph Light", 
+  "Wind NNE 7.1mph Light", 
+  "Wind NE 5.8mph Light", 
+  "Wind N 4.9mph Light"
+];
+
+var index = 0;
+
+$(function() {
+  setInterval(function() {
+    $('#wind-text-change').fadeOut(100, function() {
+      $(this).text(TEXTS[index++]).fadeIn(100);
+      if (index === TEXTS.length)
+        index = 0
+    });
+  }, 9000);
+});

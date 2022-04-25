@@ -252,12 +252,13 @@ html, body {
 }
 
 .labelFullLength {
-  text-align: center;
-  grid-column: 1 / 7;
-  font-size: 15px;
+  text-align: left;
+  grid-column: 1 / 9;
+  font-size: 12px;
   text-indent: 5%;
   font-weight: 300;
   margin-left: 2%;
+  justify-content: center;
 }
 
 .label {
