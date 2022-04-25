@@ -1,5 +1,7 @@
 # Rebuilding Paradise
 
+Project by Adam Vosburgh & Adeline Chum
+
 Studio RISK Project Led by David Benjamin
 
 Location: Paradise, California
