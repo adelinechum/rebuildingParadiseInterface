@@ -67,7 +67,7 @@ function init() {
   renderer.domElement.addEventListener( 'pointermove', raycast, false );
 
   // White directional light at shining from the top.
-  const directionalLight = new THREE.DirectionalLight( 0xffffff, 3 );
+  const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
   scene.add( directionalLight );
 
 // load scene
@@ -76,7 +76,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220420_InterfaceModel.glb', 
+    gltfloader.load( './assets/220424_InterfaceModel.glb', 
    
       function ( gltf ) {
 
