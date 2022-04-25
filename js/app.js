@@ -14,8 +14,8 @@ const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 var objects = []
 let INTERSECTED;
+var animated = []
 
-//var objectPositions = []
 var objectPositions = []
 var cameraHeight = 150
 
@@ -59,8 +59,9 @@ function init() {
   //horizontal rotation
   controls.minAzimuthAngle = - Infinity; // default
   controls.maxAzimuthAngle = Infinity; // default
+
   //vertical rotation
-  controls.maxPolarAngle = Math.PI / 2.5;
+  controls.maxPolarAngle = Math.PI / 2;
   controls.minPolarAngle = 0;
 
   renderer.domElement.addEventListener( 'click', renderView, false );
@@ -69,6 +70,26 @@ function init() {
   // White directional light at shining from the top.
   const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
   scene.add( directionalLight );
+
+
+// var progress = document.createElement('splash');
+// var progressBar = document.createElement('splash');
+
+// progress.appendChild(progressBar);
+
+// document.body.appendChild(progress);
+
+// var manager = new THREE.LoadingManager();
+// manager.onProgress = function ( item, loaded, total ) {
+//   progressBar.style.width = (loaded / total * 100) + '%';
+// };
+
+// function addRandomPlaceHoldItImage(){
+//   var r = Math.round(Math.random() * 4000);
+//   new THREE.ImageLoader(manager).load('./assets/ParadiseSeal.png');
+// }
+
+// for(var i = 0; i < 10; i++) addRandomPlaceHoldItImage();
 
 // load scene
 const dracoLoader = new DRACOLoader();
@@ -84,7 +105,7 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      scene.fog = new THREE.Fog( 'white', 150, 2200 );
+      scene.fog = new THREE.Fog( 'white', 150, 1200 );
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
@@ -100,11 +121,25 @@ const dracoLoader = new DRACOLoader();
         })
        });
 
+       console.log(scene.children);
+
+       //loop through to find animated objects names
+       scene.children.forEach(child => {
+        child.children.forEach(grandchild => {
+
+          if (grandchild.name.match('^Animated')) {
+            animated.push(grandchild);
+           }
+        })
+       });
+
       // get object world position
       scene.updateMatrixWorld(true);
       objects.matrixAutoUpdate = true;
+      animated.matrixAutoUpdate = true;
 
       objects.forEach(worldPosition);
+      animated.forEach(worldPosition);
 
       function worldPosition(element){
         var position = new THREE.Vector3();
@@ -120,6 +155,17 @@ const dracoLoader = new DRACOLoader();
 
     },
  );
+
+//block onclick  Enter interface
+ const blocker = document.getElementById( 'blocker' );
+ const instructions = document.getElementById( 'instructions' );
+
+ instructions.addEventListener( 'click', function () {
+
+  instructions.style.display = 'none';
+  blocker.style.display = 'none';
+
+ } );
 
   // listen for changes to the window size to update the canvas
   window.addEventListener( 'resize', onWindowResize, false );
@@ -233,6 +279,21 @@ document.getElementById("05").addEventListener("click", goToView, false)
 document.getElementById("06").addEventListener("click", goToView, false)
 document.getElementById("07").addEventListener("click", goToView, false)
 
+// Sidepanel go to scenes
+document.getElementById("wildfire").addEventListener("click", goToView, false)
+document.getElementById("smoke").addEventListener("click", goToView, false)
+document.getElementById("precipitation").addEventListener("click", goToView, false)
+document.getElementById("ponds").addEventListener("click", goToView, false)
+//document.getElementById("transport").addEventListener("click", goToView, false)
+document.getElementById("Stationary").addEventListener("click", goToView, false)
+document.getElementById("drone").addEventListener("click", goToView, false)
+//document.getElementById("predator").addEventListener("click", goToView, false)
+//document.getElementById("mammal").addEventListener("click", goToView, false)
+//document.getElementById("reptile").addEventListener("click", goToView, false)
+//document.getElementById("bird").addEventListener("click", goToView, false)
+
+console.log(objectPositions);
+
 function goToView (parameter) {
   var viewID = parameter.target.id
   switch (viewID) {
@@ -263,14 +324,26 @@ function goToView (parameter) {
 
     case "05":
               const position5 = objectPositions.filter(position => position.name.match('^05'))[0].position 
-              camera.position.set(position5.x -300, cameraHeight, position5.z+ 300);
+              camera.position.set(position5.x -150, cameraHeight, position5.z+ 150);
               controls.target.set(position5.x, position5.y, position5.z);
-    break;
+    break; 
+
+    case "Stationary":
+      const position5a = objectPositions.filter(position => position.name.match('^05'))[0].position 
+      camera.position.set(position5a.x -150, cameraHeight, position5a.z+ 150);
+      controls.target.set(position5a.x, position5a.y, position5a.z);
+    break; 
 
     case "06":
               const position6 = objectPositions.filter(position => position.name.match('^06'))[0].position 
-              camera.position.set(position6.x -300, cameraHeight, position6.z+ 300);
+              camera.position.set(position6.x -150, cameraHeight, position6.z+ 150);
               controls.target.set(position6.x, position6.y, position6.z);
+    break;
+
+    case "drone":
+      const position6a = objectPositions.filter(position => position.name.match('^06'))[0].position 
+      camera.position.set(position6a.x -150, cameraHeight, position6a.z+ 150);
+      controls.target.set(position6a.x, position6a.y, position6a.z);
     break;
 
     case "07":
@@ -278,6 +351,31 @@ function goToView (parameter) {
               camera.position.set(position7.x -300, cameraHeight, position7.z+ 300);
               controls.target.set(position7.x, position7.y, position7.z);
     break;
+
+    case "wildfire":
+      const position8 = objectPositions.filter(position => position.name.match('Animated_Fire1'))[0].position 
+      camera.position.set(position8.x -300, cameraHeight, position8.z+ 300);
+      controls.target.set(position8.x, position8.y, position8.z);  
+    break;
+
+      case "smoke": 
+            const position9 = objectPositions.filter(position => position.name.match('Animated_Smoke1'))[0].position 
+            camera.position.set(position9.x -300, cameraHeight, position9.z+ 300);
+            controls.target.set(position9.x, position9.y, position9.z);
+      break;
+
+      case "precipitation":              
+            const position10 = objectPositions.filter(position => position.name.match('Animated_Clouds'))[0].position 
+            camera.position.set(position10.x -300, cameraHeight, position10.z+ 300);
+            controls.target.set(position10.x, position10.y, position10.z);
+
+      break;
+
+      case "ponds":
+            const position11 = objectPositions.filter(position => position.name.match('^04'))[0].position 
+            camera.position.set(position11.x -300, cameraHeight, position11.z+ 300);
+            controls.target.set(position11.x, position11.y, position11.z);
+      break;
   
     default:  camera.position.set( -701, cameraHeight , 255); 
               controls.target.set(-828, 120, 398);

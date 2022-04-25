@@ -13,18 +13,21 @@
 	<link rel="stylesheet" href="./main.css">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
-	<script type="module" src="./js/app.js"></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@800&family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet">
 	<script  src="../three.js-master/examples/build/three.module.js"></script>
 </head>
 
 <body>
-	
 
+	<a class="title" style="width: fit-content; justify-content: center;">PARADISE HUMAN CLIMATE IMPACT MODEL</a>
+	
+	<!-- <a style="transform: translate(50%,50%);">Paradise Human Climate Impact Model</a> -->
 	<div class="navbar">
-		<a href="./about.html">About</a>
+
+		<a href="./about.html">ABOUT</a>
 		<div class="dropdown">
-		  <button class="dropbtn">Scenes
+		  <button class="dropbtn">SCENES
 			<i class="fa fa-caret-down"></i>
 		  </button>
 		  <div class="dropdown-content">
@@ -43,124 +46,136 @@
 
 	</script>
 
-<!-- <div class="grid-container">
-	
-			<div class="item1">
-				Image
-				 <img class="mapView" src="./materials/20200223_squaremap.jpg" alt="Butte County Map" style="width: 100%;"> 
-			</div>
-	
-			<div class="item2">
-				Climate Model
-			</div>
-	
-			<div class="item3">
-				Wildfire Watch
-			</div>
-	
-			<div class="item4">
-				Click
-			</div>
-	
-			<div class="item5">
-				Smoke Spread
-			</div>
-			
-			<div class="item6">
-				Click
-			</div>
-	
-			<div class="item7">
-				Precipitation
-			</div>
-	
-			<button class="item8">
-				Click
-			</button>
-	
-			<div class="item9">
-				Wind
-			</div>
-	
-			<div class="item10">
-				Wind Speeds Here
-			</div>
-	
-			<div class="item11">
-				Insfrastructure
-			</div>
-	
-			<div class="item12">
-				Active Ponds
-			</div>
-	
-			<div class="item13">
-				Click
-			</div>
-			
-			<div class="item14">
-					Transportation
-			</div>
-	
-			<div class="item15">
-				Click
-			</div>
-	
-			<div class="item16">
-				Stationary Cameras
-			</div>
-	
-			<div class="item17">
-				Click
-			</div>
-			<div class="item18">
-				Active Drones
-			</div>
-	
-			<div class="item19">
-				Click
-			</div>
-			
-			<div class="item20">
-					Wildlife Watch
-			</div>
-	
-			<div class="item21">
-				Nearby Predators
-			</div>
-	
-			<div class="item22">
-				Click
-			</div>
-	
-			<div class="item23">
-				Nearby Mammal Herds
-			</div>
-
-			<div class="item24">
-				Click
-			</div>
-			
-			<div class="item25">
-					Nearby Reptiles
-			</div>
-	
-			<div class="item26">
-				Click
-			</div>
-	
-			<div class="item27">
-				Birds
-			</div>
-	
-			<div class="item28">
-				Click
-			</div>
-		
-	</div> -->
-
 	<!-- this is the container where the three.js scene will go -->
 	<div id="container">
+
+		<div id="blocker">
+			<div id="instructions">
+				<p style="font-size:100px; margin: 0%;">
+					WELCOME
+				</p>
+				<p style="translate:(0%,-150px);">
+				Click To Explore
+				</p>
+				<p style="translate:(0%,-150px); font-size: 17px;">
+				the Paradise Human Climate Impact Model Interface</br>
+				where climate, humans, wildlife, and technology intersect.
+				</p>
+
+			</div>
+		</div>
+
+			<div class="grid-container">
+	
+				<div class="fullLengthImage">
+					<img src="./assets/07RegionalPlanCrop.jpg" style="box-shadow: none; display: flex; max-width: 100%; max-height: 100%; position: inherit;border: none;height: min-content;padding-top: 0px;padding-left: 0px;padding-bottom: 0px;padding-right: 0px; justify-self: center; align-self: center;">
+	
+				</div>
+		
+				<div class="labelTitle">
+					CLIMATE MODEL
+				</div>
+		
+				<div class="label">
+				 Wildfire Watch
+				</div>
+		
+				<div id="wildfire" class="button">
+					>
+				</div>
+		
+				<div class="label">
+					Smoke Spread
+				</div>
+				
+				<div id="smoke" class="button">
+					>
+				</div>
+		
+				<div class="label">
+					Precipitation
+				</div>
+		
+				<div id="precipitation" class="button">
+					>
+				</div>
+		
+				<div class="labelFullLength">
+					Wind
+				</div>
+		
+				<div class="labelTitle">
+					 INFRASTRUCTURE
+				</div>
+		
+				<div class="label">
+					Active Ponds
+				</div>
+		
+				<div id="ponds" class="button">
+					>
+				</div>
+				
+				<div class="label">
+					Transportation
+				</div>
+		
+				<div id="transport" class="button">
+					>
+				</div>
+		
+				<div class="label">
+					Watch Towers
+				</div>
+		
+				<div id="Stationary" class="button">
+					>
+				</div>
+				<div class="label">
+					Active Drones
+				</div>
+		
+				<div id="drone" class="button">
+					>
+				</div>
+				
+				<div class="labelTitle">
+					WILDLIFE WATCH
+				</div>
+		
+				<div class="label">
+					Nearby Predator
+				</div>
+		
+				<div id="predator" class="button">
+					>
+				</div>
+		
+				<div class="label">
+					Nearby Mammals
+				</div>
+	
+				<div id="mammal" class="button">
+					>
+				</div>
+				
+				<div class="label">
+						Nearby Reptiles
+				</div>
+		
+				<div id="reptile" class="button">
+					>
+				</div>
+		
+				<div class="label">
+					Birds
+				</div>
+		
+				<div id="bird" class="button">
+					>
+				</div>
+			
+		</div>
 
 		<!-- Render Popup -->
 <!-- 				<img id="01_CityPlan" class="displayImages" src="../assets/01CityPlan.jpg" alt="Paradise City Plan" style="display: none;">
@@ -183,4 +198,6 @@
 
 </body>
 
+	<script type="module" src="./js/app.js"></script>
+	
 </html>
