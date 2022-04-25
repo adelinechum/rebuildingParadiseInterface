@@ -139,6 +139,22 @@ const dracoLoader = new DRACOLoader();
         })
        });
 
+
+          // get object world position
+        scene.updateMatrixWorld(true);
+        objects.matrixAutoUpdate = true;
+        animated.matrixAutoUpdate = true;
+
+        objects.forEach(worldPosition);
+        animated.forEach(worldPosition);
+
+        function worldPosition(element){
+          var position = new THREE.Vector3();
+          position.getPositionFromMatrix( element.matrixWorld );
+          // objectPositions.push( element, position );
+          objectPositions.push({name: element.name, position: position});
+        }
+
       animate();
     }, undefined, function ( e ) {
 
@@ -192,21 +208,6 @@ function onWindowResize() {
 
 // animates the scene
 function animate() {
-
-   // get object world position
-   scene.updateMatrixWorld(true);
-   objects.matrixAutoUpdate = true;
-   animated.matrixAutoUpdate = true;
-
-   objects.forEach(worldPosition);
-   animated.forEach(worldPosition);
-
-   function worldPosition(element){
-     var position = new THREE.Vector3();
-     position.getPositionFromMatrix( element.matrixWorld );
-    // objectPositions.push( element, position );
-     objectPositions.push({name: element.name, position: position});
-   }
 
   requestAnimationFrame( animate );
   const time = performance.now();
@@ -290,7 +291,7 @@ document.getElementById("wildfire").addEventListener("click", goToView, false)
 document.getElementById("smoke").addEventListener("click", goToView, false)
 document.getElementById("precipitation").addEventListener("click", goToView, false)
 document.getElementById("ponds").addEventListener("click", goToView, false)
-//document.getElementById("transport").addEventListener("click", goToView, false)
+document.getElementById("transport").addEventListener("click", goToView, false)
 document.getElementById("Stationary").addEventListener("click", goToView, false)
 document.getElementById("drone").addEventListener("click", goToView, false)
 document.getElementById("predator").addEventListener("click", goToView, false)
@@ -406,8 +407,14 @@ function goToView (parameter) {
         const position15 = objectPositions.filter(position => position.name.match('Animated_Predator'))[0].position 
         camera.position.set(position15.x -100, cameraHeight+100, position15.z+ 100);
         controls.target.set(position15.x, position15.y, position15.z);
-  break;
-  
+      break;
+
+      case "transport":
+            const position16 = objectPositions.filter(position => position.name.match('Animated'))[0].position 
+            camera.position.set(position16.x -300, cameraHeight, position16.z+ 300);
+            controls.target.set(position16.x, position16.y, position16.z);
+      break;
+        
     default:  camera.position.set( -701, cameraHeight , 255); 
               controls.target.set(-828, 120, 398);
       break;
