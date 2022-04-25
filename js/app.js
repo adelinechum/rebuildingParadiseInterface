@@ -21,6 +21,7 @@ const pointer = new THREE.Vector2();
 var objects = []
 let INTERSECTED;
 var animated = []
+var testColor = []
 
 var objectPositions = []
 var cameraHeight = 150
@@ -138,6 +139,41 @@ const dracoLoader = new DRACOLoader();
            }
         })
        });
+
+        //loop through to find animated objects names
+        scene.children.forEach(child => {
+          child.children.forEach(grandchild => {
+  
+            if (grandchild.name.match('^Animated')) {
+              testColor.push(grandchild);
+              }
+          })
+          });
+
+          //buildings
+          const m1 = new THREE.MeshBasicMaterial({color: 'grey'});
+          const buildings = scene.children[1].children[2].children[1]
+          buildings.material = m1
+          // buildings.receiveShadow = true;
+          // buildings.material.emissive = 'white';
+
+          //Directional Light
+          const light = scene.children[0]
+          light.visible = false
+
+          //plane
+          // const groundPlane = scene.children[1].children[8]
+          // const m2 = new THREE.MeshLambertMaterial({color: 'white'});
+          // groundPlane.material = m2
+
+          const skyColor = 'gainsboro';  
+          const groundColor = 'black';  
+          const intensity = .8;
+          const light2 = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+          scene.add(light2);
+
+          const light3 = new THREE.AmbientLight( 0x404040, 1); // soft white light
+          scene.add( light3 );
 
 
           // get object world position
