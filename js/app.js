@@ -6,7 +6,6 @@ import { GLTFLoader } from '../three.js-master/examples/jsm/loaders/GLTFLoader.j
 import { DRACOLoader } from '../three.js-master/examples/jsm/loaders/DRACOLoader.js';
 import { MapControls } from '../three.js-master/examples/jsm/controls/OrbitControls.js';
 
-
 var script = document.createElement('script');
 script.src = 'https://code.jquery.com/jquery-3.4.1.min.js';
 script.type = 'text/javascript';
@@ -15,13 +14,12 @@ document.getElementsByTagName('head')[0].appendChild(script);
 var container, camera, controls, scene, renderer;
 const clock = new THREE.Clock();
 
-
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 var objects = []
 let INTERSECTED;
 var animated = []
-var testColor = []
+var groundItems = []
 
 var objectPositions = []
 var cameraHeight = 150
@@ -43,7 +41,6 @@ function init() {
 
   // create the rendered and set it to the height/width of the container
   renderer = new THREE.WebGLRenderer();
-  //renderer.setPixelRatio( window.devicePixelRatio );
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.setClearColor ('white', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
@@ -78,26 +75,6 @@ function init() {
   const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
   scene.add( directionalLight );
 
-
-// var progress = document.createElement('splash');
-// var progressBar = document.createElement('splash');
-
-// progress.appendChild(progressBar);
-
-// document.body.appendChild(progress);
-
-// var manager = new THREE.LoadingManager();
-// manager.onProgress = function ( item, loaded, total ) {
-//   progressBar.style.width = (loaded / total * 100) + '%';
-// };
-
-// function addRandomPlaceHoldItImage(){
-//   var r = Math.round(Math.random() * 4000);
-//   new THREE.ImageLoader(manager).load('./assets/ParadiseSeal.png');
-// }
-
-// for(var i = 0; i < 10; i++) addRandomPlaceHoldItImage();
-
 // load scene
 const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath( '../three.js-master/examples/js/libs/draco/gltf/' );
@@ -118,37 +95,43 @@ const dracoLoader = new DRACOLoader();
       mixer.clipAction( gltf.animations[ 0 ] ).play();
       mixer.timeScale = 2; //Increased Animation Speed
 
-       //loop through to find renderView names
+       //loop through to find renderView and animated objects names
        scene.children.forEach(child => {
         child.children.forEach(grandchild => {
 
           if (grandchild.name.match('^0')) {
             objects.push(grandchild);
            }
-        })
-       });
 
-       console.log(scene.children);
-
-       //loop through to find animated objects names
-       scene.children.forEach(child => {
-        child.children.forEach(grandchild => {
-
-          if (grandchild.name.match('^Animated')) {
+           if (grandchild.name.match('^Animated')) {
             animated.push(grandchild);
            }
+
+           if (grandchild.name.match('^Ground')) {
+            groundItems.push(grandchild);
+           }
+
+
         })
        });
 
-        //loop through to find animated objects names
-        scene.children.forEach(child => {
-          child.children.forEach(grandchild => {
-  
-            if (grandchild.name.match('^Animated')) {
-              testColor.push(grandchild);
-              }
-          })
-          });
+        // get object world position
+        scene.updateMatrixWorld(true);
+        objects.matrixAutoUpdate = true;
+        animated.matrixAutoUpdate = true;
+        groundItems.matrixAutoUpdate = true;
+
+        objects.forEach(worldPosition);
+        animated.forEach(worldPosition);
+        groundItems.forEach(worldPosition);
+
+        function worldPosition(element){
+          var position = new THREE.Vector3();
+          position.getPositionFromMatrix( element.matrixWorld );
+          objectPositions.push({name: element.name, position: position});
+
+        }
+       console.log(scene.children);
 
           //buildings
           const m1 = new THREE.MeshBasicMaterial({color: 'grey'});
@@ -174,22 +157,7 @@ const dracoLoader = new DRACOLoader();
 
           const light3 = new THREE.AmbientLight( 0x404040, 1); // soft white light
           scene.add( light3 );
-
-
-          // get object world position
-        scene.updateMatrixWorld(true);
-        objects.matrixAutoUpdate = true;
-        animated.matrixAutoUpdate = true;
-
-        objects.forEach(worldPosition);
-        animated.forEach(worldPosition);
-
-        function worldPosition(element){
-          var position = new THREE.Vector3();
-          position.getPositionFromMatrix( element.matrixWorld );
-          // objectPositions.push( element, position );
-          objectPositions.push({name: element.name, position: position});
-        }
+        
 
       animate();
     }, undefined, function ( e ) {
@@ -253,8 +221,6 @@ function animate() {
 }
 
 function render() {
-// console.log(camera.position);
-// console.log(controls.target);
   renderer.render( scene, camera ); 
 }
 
@@ -314,7 +280,7 @@ document.body.addEventListener( 'keydown', function (e) {
 } );
 
 // Scenes go to camera position
-document.getElementById("01").addEventListener("click", goToView, false)
+document.getElementById("01").addEventListener("click", goToView, false) 
 document.getElementById("02").addEventListener("click", goToView, false)
 document.getElementById("03").addEventListener("click", goToView, false)
 document.getElementById("04").addEventListener("click", goToView, false)
@@ -402,7 +368,7 @@ function goToView (parameter) {
     break;
 
       case "smoke": 
-            const position9 = objectPositions.filter(position => position.name.match('Animated_Smoke1'))[0].position 
+            const position9 = objectPositions.filter(position => position.name.match('Animated_Smoke2'))[0].position 
             camera.position.set(position9.x -300, cameraHeight, position9.z+ 300);
             controls.target.set(position9.x, position9.y, position9.z);
       break;
@@ -415,7 +381,7 @@ function goToView (parameter) {
       break;
 
       case "ponds":
-            const position11 = objectPositions.filter(position => position.name.match('^04'))[0].position 
+            const position11 = objectPositions.filter(position => position.name.match('Ground_Ponds_Filled'))[0].position
             camera.position.set(position11.x -300, cameraHeight, position11.z+ 300);
             controls.target.set(position11.x, position11.y, position11.z);
       break;
@@ -446,7 +412,7 @@ function goToView (parameter) {
       break;
 
       case "transport":
-            const position16 = objectPositions.filter(position => position.name.match('Animated'))[0].position 
+            const position16 = objectPositions.filter(position => position.name.match('Animated_Car'))[0].position 
             camera.position.set(position16.x -300, cameraHeight, position16.z+ 300);
             controls.target.set(position16.x, position16.y, position16.z);
       break;
