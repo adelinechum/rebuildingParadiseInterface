@@ -381,7 +381,7 @@ function goToView (parameter) {
       break;
 
       case "ponds":
-            const position11 = objectPositions.filter(position => position.name.match('Ground_Ponds_Filled'))[0].position
+            const position11 = objectPositions.filter(position => position.name.match('^03'))[0].position
             camera.position.set(position11.x -300, cameraHeight, position11.z+ 300);
             controls.target.set(position11.x, position11.y, position11.z);
       break;

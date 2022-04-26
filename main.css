@@ -125,8 +125,6 @@ html, body {
   padding: 14px 16px;
   text-decoration: none;
   z-index: 1000;
-
-
 }
 
 /* The dropdown container */
@@ -218,16 +216,16 @@ html, body {
   width: 15%;
   min-width: 150px;
   height: fit-content;
+  max-height: 90%;
   gap: 6px;
   opacity: 100%;
   outline: 1px solid black;
   background-color: rgba(255, 255, 255, 0.8);
   padding: 5px 5px 5px 5px;
-  top: 10%;
+  top: 8.5%;
   left: 2%;
-  transform: translate(0%,10%);
+  /* transform: translate(0%,10%); */
   grid-column: auto;
-
 }
 
 .grid-container > div {
@@ -249,7 +247,6 @@ html, body {
   grid-column: 1/9;
   font-size: 17px;
   font-weight: 400;
-  
 }
 
 .labelFullLength {
