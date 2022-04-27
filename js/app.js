@@ -82,7 +82,7 @@ const dracoLoader = new DRACOLoader();
 
     const gltfloader = new GLTFLoader();
     gltfloader.setDRACOLoader( dracoLoader );
-    gltfloader.load( './assets/220425_InterfaceModel.glb', 
+    gltfloader.load( './assets/220427_InterfaceModel.glb', 
    
       function ( gltf ) {
 
@@ -135,7 +135,7 @@ const dracoLoader = new DRACOLoader();
        console.log(scene.children);
 
           //buildings
-          const m1 = new THREE.MeshBasicMaterial({color: 'grey'});
+          const m1 = new THREE.MeshBasicMaterial({color: '#bcbcbc'});
           const buildings = scene.children[1].children[2].children[1]
           buildings.material = m1
           // buildings.receiveShadow = true;
