@@ -44,6 +44,7 @@ function init() {
   renderer.setSize( window.innerWidth, window.innerHeight );
   renderer.setClearColor ('white', 1); // this is the background color seen while scene is loading
   container.appendChild( renderer.domElement );
+  renderer.setPixelRatio(window.devicePixelRatio)
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
   camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
