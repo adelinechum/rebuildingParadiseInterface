@@ -258,7 +258,7 @@ function raycast ( e ) {
 function renderView ( e ) {
 
   if (INTERSECTED) {
-    console.log(INTERSECTED.name);
+   // console.log(INTERSECTED.name);
     var image = document.getElementById(INTERSECTED.name);
     image.style.display = 'flex';
   }
@@ -280,13 +280,13 @@ document.body.addEventListener( 'keydown', function (e) {
 } );
 
 // Scenes go to camera position
-document.getElementById("01").addEventListener("click", goToView, false) 
-document.getElementById("02").addEventListener("click", goToView, false)
-document.getElementById("03").addEventListener("click", goToView, false)
-document.getElementById("04").addEventListener("click", goToView, false)
-document.getElementById("05").addEventListener("click", goToView, false)
-document.getElementById("06").addEventListener("click", goToView, false)
-document.getElementById("07").addEventListener("click", goToView, false)
+document.getElementById("01").addEventListener("click", goToView, false) //city plan
+document.getElementById("02").addEventListener("click", goToView, false) // single fam house
+document.getElementById("03").addEventListener("click", goToView, false) //ponds
+document.getElementById("04").addEventListener("click", goToView, false) // built out house
+document.getElementById("05").addEventListener("click", goToView, false) //logging
+document.getElementById("06").addEventListener("click", goToView, false) // wildlands
+document.getElementById("07").addEventListener("click", goToView, false) // regional plan
 
 // Sidepanel go to scenes
 document.getElementById("wildfire").addEventListener("click", goToView, false)
@@ -319,7 +319,7 @@ function goToView (parameter) {
     break;
 
     case "03":              
-              const position3 = objectPositions.filter(position => position.name.match('^03'))[0].position 
+              const position3 = objectPositions.filter(position => position.name.match('^05'))[0].position 
               camera.position.set(position3.x -300, cameraHeight, position3.z+ 300);
               controls.target.set(position3.x, position3.y, position3.z);
 
@@ -332,13 +332,13 @@ function goToView (parameter) {
     break;
 
     case "05":
-              const position5 = objectPositions.filter(position => position.name.match('^05'))[0].position 
+              const position5 = objectPositions.filter(position => position.name.match('^03'))[0].position 
               camera.position.set(position5.x -150, cameraHeight, position5.z+ 150);
               controls.target.set(position5.x, position5.y, position5.z);
     break; 
 
     case "Stationary":
-      const position5a = objectPositions.filter(position => position.name.match('^05'))[0].position 
+      const position5a = objectPositions.filter(position => position.name.match('^03'))[0].position 
       camera.position.set(position5a.x -150, cameraHeight, position5a.z+ 150);
       controls.target.set(position5a.x, position5a.y, position5a.z);
     break; 
@@ -381,7 +381,7 @@ function goToView (parameter) {
       break;
 
       case "ponds":
-            const position11 = objectPositions.filter(position => position.name.match('^03'))[0].position
+            const position11 = objectPositions.filter(position => position.name.match('^05'))[0].position
             camera.position.set(position11.x -300, cameraHeight, position11.z+ 300);
             controls.target.set(position11.x, position11.y, position11.z);
       break;
