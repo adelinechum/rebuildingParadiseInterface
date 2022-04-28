@@ -135,7 +135,7 @@ const dracoLoader = new DRACOLoader();
        console.log(scene.children);
 
           //buildings
-          const m1 = new THREE.MeshBasicMaterial({color: '#bcbcbc'});
+          const m1 = new THREE.MeshBasicMaterial({color: '#b3b3b3'});
           const buildings = scene.children[1].children[2].children[1]
           buildings.material = m1
           // buildings.receiveShadow = true;
