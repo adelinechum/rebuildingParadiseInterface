@@ -132,7 +132,7 @@ const dracoLoader = new DRACOLoader();
           objectPositions.push({name: element.name, position: position});
 
         }
-       console.log(scene.children);
+       //console.log(scene.children);
 
           //buildings
           const m1 = new THREE.MeshBasicMaterial({color: '#b3b3b3'});
@@ -259,7 +259,7 @@ function raycast ( e ) {
 function renderView ( e ) {
 
   if (INTERSECTED) {
-   // console.log(INTERSECTED.name);
+   // //console.log(INTERSECTED.name);
     var image = document.getElementById(INTERSECTED.name);
     image.style.display = 'flex';
   }
@@ -302,7 +302,7 @@ document.getElementById("mammal").addEventListener("click", goToView, false)
 document.getElementById("reptile").addEventListener("click", goToView, false)
 document.getElementById("bird").addEventListener("click", goToView, false)
 
-console.log(objectPositions);
+//console.log(objectPositions);
 
 function goToView (parameter) {
   var viewID = parameter.target.id
