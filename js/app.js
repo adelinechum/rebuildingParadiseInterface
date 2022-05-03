@@ -47,7 +47,8 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio)
 
   // create PerspectiveCamera (FieldofView default 60 ,AspectRatio,NearView, FarView)
-  camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
+  //camera = new THREE.PerspectiveCamera( 40, container.clientWidth / container.clientHeight, 10, 50000 );
+  camera = new THREE.PerspectiveCamera( 60, container.clientWidth / container.clientHeight, 10, 50000 ); // for interface render
   camera.position.set( -701, cameraHeight , 255); // starting position of the camera
 
 
@@ -90,7 +91,9 @@ const dracoLoader = new DRACOLoader();
       model.position.set( 1, 1, 0 );
       model.scale.set( 0.05, 0.05, 0.05 );
       scene.add( model );
-      scene.fog = new THREE.Fog( 'white', 150, 1200 );
+      //scene.fog = new THREE.Fog( 'white', 150, 1200 );
+
+      scene.fog = new THREE.Fog( 'white', 150, 1700 ); // for interface render
 
       mixer = new THREE.AnimationMixer( model );
       mixer.clipAction( gltf.animations[ 0 ] ).play();
